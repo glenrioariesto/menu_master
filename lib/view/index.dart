@@ -49,8 +49,7 @@ class _indexState extends State<index> {
         title: Text(widget.title),
         centerTitle: true,
         titleTextStyle: const TextStyle(
-          fontSize: 25,
-          fontFamily: 'comic sans',
+          fontSize: 30,
         ),
       ),
       body: Center(
