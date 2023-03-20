@@ -20,6 +20,7 @@ class _HomeState extends State<Home> {
         automaticallyImplyLeading: false,
         backgroundColor: ColorPalette.primaryColor,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.asset(
               'assets/images/logoMenuMaster.png',
@@ -27,14 +28,12 @@ class _HomeState extends State<Home> {
               width: 50,
               fit: BoxFit.cover,
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.12,
-            ),
             Text(
               widget.title,
               textAlign: TextAlign.center,
               style: const TextStyle(color: ColorPalette.textColorMM),
             ),
+            SizedBox()
           ],
         ),
         titleTextStyle: const TextStyle(
