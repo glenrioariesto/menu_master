@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
               textAlign: TextAlign.center,
               style: const TextStyle(color: ColorPalette.textColorMM),
             ),
-            SizedBox()
+            const SizedBox()
           ],
         ),
         titleTextStyle: const TextStyle(
