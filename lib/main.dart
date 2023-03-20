@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:menu_master/view/profile.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         Home.nameRoute: (context) => const Home(title: 'Menu Master'),
         Login.nameRoute: (context) => const Login(title: 'Login Menu Master'),
         Register.nameRoute: (context) => const Register(),
+        Profile.nameRoute: (context) => const Profile(),
       },
     );
   }

@@ -21,99 +21,102 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            controller: _usernameTextController,
-            decoration: const InputDecoration(
-                labelText: 'Email',
-                errorStyle: TextStyle(color: ColorPalette.textColorMM)),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter your Email';
-              }
-              return null;
-            },
-            onSaved: (value) {},
-          ),
-          TextFormField(
-            controller: _passwordTextController,
-            obscureText: true,
-            decoration: const InputDecoration(
-                labelText: 'Password',
-                errorStyle: TextStyle(color: ColorPalette.textColorMM)),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter your password';
-              }
-              return null;
-            },
-            onSaved: (value) {},
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                              email: _usernameTextController.text,
-                              password: _passwordTextController.text)
-                          .then((value) {
-                        if (kDebugMode) {
-                          print('Login Success');
-                        }
-                        Navigator.pushNamed(context, Home.nameRoute);
-                      }).onError((error, stackTrace) {
-                        if (kDebugMode) {
-                          print('login error ${error.toString()}');
-                        }
-                      });
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        ColorPalette.secondaryColor),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
+      child: Padding(
+        padding: const EdgeInsets.all(50.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              controller: _usernameTextController,
+              decoration: const InputDecoration(
+                  labelText: 'Email',
+                  errorStyle: TextStyle(color: ColorPalette.textColorMM)),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your Email';
+                }
+                return null;
+              },
+              onSaved: (value) {},
+            ),
+            TextFormField(
+              controller: _passwordTextController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                  labelText: 'Password',
+                  errorStyle: TextStyle(color: ColorPalette.textColorMM)),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your password';
+                }
+                return null;
+              },
+              onSaved: (value) {},
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                                email: _usernameTextController.text,
+                                password: _passwordTextController.text)
+                            .then((value) {
+                          if (kDebugMode) {
+                            print('Login Success');
+                          }
+                          Navigator.pushNamed(context, Home.nameRoute);
+                        }).onError((error, stackTrace) {
+                          if (kDebugMode) {
+                            print('login error ${error.toString()}');
+                          }
+                        });
+                      }
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          ColorPalette.secondaryColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
                       ),
                     ),
-                  ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Register.nameRoute);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        ColorPalette.secondaryColor),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
-                  child: const Text(
-                    'Register',
-                    style: TextStyle(color: Colors.black),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Register.nameRoute);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          ColorPalette.secondaryColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

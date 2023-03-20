@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
-// import 'package:menu_master/shared/constants.dart';
 import 'package:menu_master/widgets/widgets_drawerhome.dart';
 
 class Home extends StatefulWidget {
@@ -18,11 +17,24 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        automaticallyImplyLeading: false,
         backgroundColor: ColorPalette.primaryColor,
         title: Row(
           children: [
-            Text(widget.title),
+            Image.asset(
+              'assets/images/logoMenuMaster.png',
+              height: 50,
+              width: 50,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.12,
+            ),
+            Text(
+              widget.title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: ColorPalette.textColorMM),
+            ),
           ],
         ),
         titleTextStyle: const TextStyle(

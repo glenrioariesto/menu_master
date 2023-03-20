@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
+import 'package:menu_master/view/profile.dart';
 
 class DrawerHome extends StatelessWidget {
   const DrawerHome({super.key});
@@ -19,13 +20,13 @@ class DrawerHome extends StatelessWidget {
                 color: ColorPalette.primaryColor,
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(15))),
-            child: Text('Home'),
+            child: Center(child: Text('Home')),
           ),
           ListTile(
             title: const Text('Profile'),
             onTap: () {
               // Update the state of the app.
-              // ...
+              Navigator.pushNamed(context, Profile.nameRoute);
             },
           ),
           ListTile(
