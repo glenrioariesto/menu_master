@@ -17,7 +17,8 @@ class DrawerHome extends StatelessWidget {
           const DrawerHeader(
             decoration: BoxDecoration(
                 color: ColorPalette.primaryColor,
-                borderRadius: BorderRadius.all(Radius.circular(12))),
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(15))),
             child: Text('Home'),
           ),
           ListTile(

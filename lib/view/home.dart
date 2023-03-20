@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:menu_master/shared/constants.dart';
 // import 'package:menu_master/shared/constants.dart';
 import 'package:menu_master/widgets/widgets_drawerhome.dart';
 
@@ -17,8 +18,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: ColorPalette.primaryColor,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(widget.title),
           ],

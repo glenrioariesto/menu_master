@@ -22,7 +22,7 @@ class _LoginState extends State<Login> {
           child: Column(
             children: [
               const SizedBox(
-                height: 85,
+                height: 60,
               ),
               Image.asset(
                 'assets/images/logoMenuMaster.png',
