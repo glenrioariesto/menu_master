@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
-import 'package:menu_master/view/profile.dart';
+import 'package:menu_master/view/profile/profile.dart';
 
 class DrawerHome extends StatelessWidget {
   const DrawerHome({super.key});
