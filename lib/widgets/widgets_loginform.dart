@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
 import 'package:menu_master/view/register.dart';
 import 'package:menu_master/view/home.dart';
+import 'package:menu_master/widgets/widgets_massagesnackbar.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -71,9 +72,18 @@ class _LoginFormState extends State<LoginForm> {
                           }
                           Navigator.pushNamed(context, Home.nameRoute);
                         }).onError((error, stackTrace) {
-                          if (kDebugMode) {
-                            print('login error ${error.toString()}');
+                          String msg = '';
+                          if (error is FirebaseException) {
+                            msg = error.message.toString();
+                          } else {
+                            msg = 'An Errorerror occurred: ${error.toString()}';
                           }
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: ColorPalette.primaryColor,
+                            elevation: 0,
+                            behavior: SnackBarBehavior.floating,
+                            content: MassageSnackBar(msgError: msg),
+                          ));
                         });
                       }
                     },
