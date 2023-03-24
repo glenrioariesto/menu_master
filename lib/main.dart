@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:menu_master/view/home.dart';
 import 'package:menu_master/view/login.dart';
 import 'package:menu_master/view/register.dart';
-// import 'package:menu_master/shared/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
