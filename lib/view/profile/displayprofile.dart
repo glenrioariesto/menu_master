@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:menu_master/view/profile/picprofile.dart';
-import 'package:menu_master/view/profile/editprofile.dart';
 import 'package:menu_master/shared/constants.dart';
 
-class displayprofile extends StatelessWidget {
-  const displayprofile({super.key});
+class Displayprofile extends StatelessWidget {
+  const Displayprofile({super.key});
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       //display
-      displayprof(
+      Displayprof(
         title: 'Settings',
         icon: Icons.settings,
         onPress: () {},
       ),
-      displayprof(
+      Displayprof(
         title: 'Saldo',
         icon: Icons.money,
         onPress: () {},
       ),
-      displayprof(
+      Displayprof(
         title: 'User Management',
         icon: Icons.chrome_reader_mode_outlined,
         onPress: () {},
       ),
-      displayprof(
+      Displayprof(
         title: 'Information',
         icon: Icons.info_rounded,
         onPress: () {},
       ),
-      displayprof(
+      Displayprof(
         title: 'Logout',
         icon: Icons.logout_outlined,
         textColor: ColorPalette.primaryColor,
@@ -42,8 +38,8 @@ class displayprofile extends StatelessWidget {
   }
 }
 
-class displayprof extends StatelessWidget {
-  const displayprof({
+class Displayprof extends StatelessWidget {
+  const Displayprof({
     super.key,
     required this.title,
     required this.icon,
@@ -72,7 +68,7 @@ class displayprof extends StatelessWidget {
       ),
       title: Text(title,
           style:
-              Theme.of(context).textTheme.bodyText1?.apply(color: textColor)),
+              Theme.of(context).textTheme.bodyLarge?.apply(color: textColor)),
       trailing: endIcon
           ? Container(
               width: 30,

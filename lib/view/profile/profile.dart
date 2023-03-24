@@ -10,9 +10,9 @@ class Profile extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorPalette.primaryColor,
-        title: Text("Profile"),
+        title: const Text("Profile"),
       ),
-      body: body(),
+      body: const Body(),
     );
   }
 }

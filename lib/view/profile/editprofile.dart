@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:menu_master/shared/constants.dart';
 import 'package:menu_master/view/profile/editprofile_update.dart';
 
-class editprofile extends StatelessWidget {
-  const editprofile({super.key});
+class Editprofile extends StatelessWidget {
+  const Editprofile({super.key});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -13,27 +11,27 @@ class editprofile extends StatelessWidget {
         const SizedBox(
           height: 30,
         ),
-        Text(
+        const Text(
           "Mamed Kudasi",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        Text("AFAFGaming123@gmail.com"),
+        const Text("AFAFGaming123@gmail.com"),
         const SizedBox(
           height: 10,
         ),
         SizedBox(
             width: 200,
             child: ElevatedButton(
-                style: ButtonStyle(
+                style: const ButtonStyle(
                     backgroundColor:
                         MaterialStatePropertyAll(ColorPalette.primaryColor)),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => editprofile_update()));
+                          builder: (context) => Editprofileupdate()));
                 },
-                child: Text(
+                child: const Text(
                   "Edit Profile",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ))),

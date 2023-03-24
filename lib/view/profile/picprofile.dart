@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
-class picprofile extends StatelessWidget {
-  const picprofile({super.key});
+class Picprofile extends StatelessWidget {
+  const Picprofile({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      //color: Colors.amber,
-      //transformAlignment: Alignment.bottomCenter,
-      margin: EdgeInsetsDirectional.only(bottom: 0, end: 0, start: 0, top: 25),
+      margin: const EdgeInsetsDirectional.only(
+          bottom: 0, end: 0, start: 0, top: 25),
       height: 115,
       width: 115,
       child: Stack(
         fit: StackFit.expand,
-        children: [
+        children: const [
           CircleAvatar(
             backgroundImage: AssetImage("assets/images/profile_template.jpg"),
           ),

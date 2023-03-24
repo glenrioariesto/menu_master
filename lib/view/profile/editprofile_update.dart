@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:menu_master/shared/constants.dart';
 import 'package:menu_master/view/profile/picprofile.dart';
 
-class editprofile_update extends StatelessWidget {
-  editprofile_update({super.key});
-  final _formKey = GlobalKey<FormState>();
+class Editprofileupdate extends StatelessWidget {
+  Editprofileupdate({super.key});
   final TextEditingController _changeUsernameTC = TextEditingController();
   final TextEditingController _changeEmailTC = TextEditingController();
   final TextEditingController _changePasswordTC = TextEditingController();
@@ -16,14 +13,14 @@ class editprofile_update extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           backgroundColor: ColorPalette.primaryColor,
-          title: Text(
+          title: const Text(
             "Edit Profil",
             style: TextStyle(fontWeight: FontWeight.bold),
           )),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            picprofile(),
+            const Picprofile(),
             Padding(
               padding: const EdgeInsets.all(30),
               child: Form(
