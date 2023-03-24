@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:menu_master/view/profile.dart';
+import 'package:menu_master/view/profile/profile.dart';
 import 'firebase_options.dart';
-
 import 'package:flutter/material.dart';
 import 'package:menu_master/view/home.dart';
 import 'package:menu_master/view/login.dart';
