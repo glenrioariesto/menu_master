@@ -1,6 +1,6 @@
 # menu_master
 
-A new Flutter project.
+Aplikasi ini merupakan cloning dari aplikasi - aplikasi besar seperti GoFood, ShopeeFood namun di perkecil cangkupannya menjadi lebih spesifik pada makanan saja.
 
 ## Getting Started
 
