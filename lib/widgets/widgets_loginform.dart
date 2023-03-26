@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:menu_master/controller/auth_log.dart';
 import 'package:menu_master/shared/constants.dart';
 import 'package:menu_master/view/register.dart';
-import 'package:menu_master/view/home.dart';
 import 'package:menu_master/widgets/widgets_massagesnackbar.dart';
+
+import '../view/home.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -17,6 +17,8 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
+  bool isLogin = false;
+  String msg = '';
 
   @override
   Widget build(BuildContext context) {
@@ -60,32 +62,34 @@ class _LoginFormState extends State<LoginForm> {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                                email: _usernameTextController.text,
-                                password: _passwordTextController.text)
-                            .then((value) {
-                          if (kDebugMode) {
-                            print('Login Success');
-                          }
-                          Navigator.pushNamed(context, Home.nameRoute);
-                        }).onError((error, stackTrace) {
-                          String msg = '';
-                          if (error is FirebaseException) {
-                            msg = error.message.toString();
+                      setState(() async {
+                        bool isLogin = await AuthLogin.login(
+                            _usernameTextController.text,
+                            _passwordTextController.text);
+                        String msg = await AuthLogin.infoError(
+                            _usernameTextController.text,
+                            _passwordTextController.text);
+                        print(msg);
+                        print(isLogin);
+                      });
+                      setState(() {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+
+                          if (isLogin) {
+                            Navigator.pushNamed(context, Home.nameRoute);
                           } else {
-                            msg = 'An Errorerror occurred: ${error.toString()}';
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: ColorPalette.primaryColor,
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                content: MassageSnackBar(msgError: msg),
+                              ),
+                            );
                           }
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: ColorPalette.primaryColor,
-                            elevation: 0,
-                            behavior: SnackBarBehavior.floating,
-                            content: MassageSnackBar(msgError: msg),
-                          ));
-                        });
-                      }
+                        }
+                      });
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
