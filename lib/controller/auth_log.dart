@@ -21,18 +21,18 @@ class AuthLogin {
   }
 
   static Future<String> infoError(String email, String password) async {
-    String msg = '';
+    String msg = 'hallo';
 
     try {
-      FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
     } catch (e) {
       if (e is FirebaseException) {
-        msg = e.message.toString();
+        return msg = e.message.toString();
       } else {
-        msg = 'An Errorerror occurred: ${e.toString()}';
+        return msg = 'An Errorerror occurred: ${e.toString()}';
       }
     }
     return msg;

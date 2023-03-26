@@ -18,7 +18,6 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
   bool isLogin = false;
-  String msg = '';
 
   @override
   Widget build(BuildContext context) {
@@ -61,35 +60,33 @@ class _LoginFormState extends State<LoginForm> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ElevatedButton(
-                    onPressed: () {
-                      setState(() async {
-                        bool isLogin = await AuthLogin.login(
-                            _usernameTextController.text,
-                            _passwordTextController.text);
-                        String msg = await AuthLogin.infoError(
-                            _usernameTextController.text,
-                            _passwordTextController.text);
-                        print(msg);
-                        print(isLogin);
-                      });
-                      setState(() {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        await AuthLogin.login(_usernameTextController.text,
+                                _passwordTextController.text)
+                            .then((value) {
+                          isLogin = value;
                           if (isLogin) {
                             Navigator.pushNamed(context, Home.nameRoute);
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                          }
+                        });
+                        if (isLogin != true) {
+                          await AuthLogin.infoError(
+                                  _usernameTextController.text,
+                                  _passwordTextController.text)
+                              .then((value) {
+                            return ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 backgroundColor: ColorPalette.primaryColor,
                                 elevation: 0,
                                 behavior: SnackBarBehavior.floating,
-                                content: MassageSnackBar(msgError: msg),
+                                content: MassageSnackBar(msgError: value),
                               ),
                             );
-                          }
+                          });
                         }
-                      });
+                      }
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
