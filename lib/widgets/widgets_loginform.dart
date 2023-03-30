@@ -1,10 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:menu_master/shared/constants.dart';
-import 'package:menu_master/view/register.dart';
-import 'package:menu_master/view/home.dart';
-import 'package:menu_master/widgets/widgets_massagesnackbar.dart';
+
+import '../widgets/widgets_massagesnackbar.dart';
+import '../shared/constants.dart';
+
+import 'package:provider/provider.dart';
+import '../provider/auth.dart';
+
+import '../view/register.dart';
+import '../view/home.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -15,8 +18,19 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameTextController = TextEditingController();
-  final TextEditingController _passwordTextController = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+
+  Future<String> _authUserLogin(String email, String password) {
+    return Future.delayed(const Duration(microseconds: 2250)).then((_) async {
+      try {
+        await Provider.of<Auth>(context, listen: false).login(email, password);
+      } catch (err) {
+        return "An Errorerror occurred: ${err.toString()}";
+      }
+      return 'Login Success';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +42,7 @@ class _LoginFormState extends State<LoginForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
-              controller: _usernameTextController,
+              controller: _email,
               decoration: const InputDecoration(
                   labelText: 'Email',
                   errorStyle: TextStyle(color: ColorPalette.textColorMM)),
@@ -41,7 +55,7 @@ class _LoginFormState extends State<LoginForm> {
               onSaved: (value) {},
             ),
             TextFormField(
-              controller: _passwordTextController,
+              controller: _password,
               obscureText: true,
               decoration: const InputDecoration(
                   labelText: 'Password',
@@ -59,31 +73,23 @@ class _LoginFormState extends State<LoginForm> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                                email: _usernameTextController.text,
-                                password: _passwordTextController.text)
+                        _authUserLogin(_email.text, _password.text)
                             .then((value) {
-                          if (kDebugMode) {
-                            print('Login Success');
-                          }
-                          Navigator.pushNamed(context, Home.nameRoute);
-                        }).onError((error, stackTrace) {
-                          String msg = '';
-                          if (error is FirebaseException) {
-                            msg = error.message.toString();
+                          Provider.of<Auth>(context, listen: false).tempData();
+                          // print(value);
+                          if (value == 'Login Success') {
+                            Navigator.pushNamed(context, Home.nameRoute);
                           } else {
-                            msg = 'An Errorerror occurred: ${error.toString()}';
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: ColorPalette.primaryColor,
+                              elevation: 0,
+                              behavior: SnackBarBehavior.floating,
+                              content: MassageSnackBar(msgError: value),
+                            ));
                           }
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: ColorPalette.primaryColor,
-                            elevation: 0,
-                            behavior: SnackBarBehavior.floating,
-                            content: MassageSnackBar(msgError: msg),
-                          ));
                         });
                       }
                     },
