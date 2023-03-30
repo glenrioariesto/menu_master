@@ -1,14 +1,15 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:menu_master/view/profile/profile.dart';
-import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:menu_master/view/home.dart';
-import 'package:menu_master/view/login.dart';
-import 'package:menu_master/view/register.dart';
+
+import 'package:provider/provider.dart';
+import '../provider/auth.dart';
+import '../provider/product.dart';
+
+import '../view/profile/profile.dart';
+import '../view/login.dart';
+import '../view/register.dart';
+import '../view/home.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -18,16 +19,44 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Menu Master',
-      initialRoute: Login.nameRoute,
-      routes: {
-        Home.nameRoute: (context) => const Home(title: 'Menu Master'),
-        Login.nameRoute: (context) => const Login(title: 'Login Menu Master'),
-        Register.nameRoute: (context) => const Register(),
-        Profile.nameRoute: (context) => const Profile(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Product(),
+        ),
+      ],
+      builder: (context, child) => Consumer<Auth>(
+        builder: (context, auth, child) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Menu Master',
+          initialRoute: Login.nameRoute,
+          onGenerateInitialRoutes: (set) {
+            if (auth.isAuth) {
+              print(set);
+              print(auth.isAuth);
+              return [
+                MaterialPageRoute(
+                    builder: (context) => Home(title: 'Menu Master'),
+                    settings: RouteSettings(name: Home.nameRoute))
+              ];
+            }
+            return [
+              MaterialPageRoute(
+                  builder: (context) => Login(title: "Login Menu Master"),
+                  settings: RouteSettings(name: Login.nameRoute))
+            ];
+          },
+          routes: {
+            Home.nameRoute: (context) => Home(title: 'Menu Master'),
+            Profile.nameRoute: (context) => const Profile(),
+            Login.nameRoute: (context) => Login(title: 'Login Menu Master'),
+            Register.nameRoute: (context) => const Register(),
+          },
+        ),
+      ),
     );
   }
 }
