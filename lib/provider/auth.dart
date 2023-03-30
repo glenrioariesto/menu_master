@@ -61,7 +61,7 @@ class Auth with ChangeNotifier {
       ));
       notifyListeners();
     } catch (error) {
-      throw error;
+      rethrow;
     }
   }
 
@@ -92,7 +92,7 @@ class Auth with ChangeNotifier {
       ));
       notifyListeners();
     } catch (error) {
-      throw error;
+      rethrow;
     }
   }
 }

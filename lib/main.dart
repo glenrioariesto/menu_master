@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -35,24 +36,29 @@ class MyApp extends StatelessWidget {
           initialRoute: Login.nameRoute,
           onGenerateInitialRoutes: (set) {
             if (auth.isAuth) {
-              print(set);
-              print(auth.isAuth);
+              if (kDebugMode) {
+                print(set);
+              }
+              if (kDebugMode) {
+                print(auth.isAuth);
+              }
               return [
                 MaterialPageRoute(
-                    builder: (context) => Home(title: 'Menu Master'),
-                    settings: RouteSettings(name: Home.nameRoute))
+                    builder: (context) => const Home(title: 'Menu Master'),
+                    settings: const RouteSettings(name: Home.nameRoute))
               ];
             }
             return [
               MaterialPageRoute(
-                  builder: (context) => Login(title: "Login Menu Master"),
-                  settings: RouteSettings(name: Login.nameRoute))
+                  builder: (context) => const Login(title: "Login Menu Master"),
+                  settings: const RouteSettings(name: Login.nameRoute))
             ];
           },
           routes: {
-            Home.nameRoute: (context) => Home(title: 'Menu Master'),
+            Home.nameRoute: (context) => const Home(title: 'Menu Master'),
             Profile.nameRoute: (context) => const Profile(),
-            Login.nameRoute: (context) => Login(title: 'Login Menu Master'),
+            Login.nameRoute: (context) =>
+                const Login(title: 'Login Menu Master'),
             Register.nameRoute: (context) => const Register(),
           },
         ),
