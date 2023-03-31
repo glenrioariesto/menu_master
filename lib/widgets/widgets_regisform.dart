@@ -1,7 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:menu_master/shared/constants.dart';
+
+import '../shared/constants.dart';
+import '../widgets/widgets_massagesnackbar.dart';
+
+import 'package:provider/provider.dart';
+import '../provider/auth.dart';
 
 import '../view/login.dart';
 
@@ -14,12 +17,28 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameTextController = TextEditingController();
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _confirmpassword = TextEditingController();
+  String? _selectItems = "Customer";
 
-  final TextEditingController _emailTextController = TextEditingController();
-  final TextEditingController _passwordTextController = TextEditingController();
-  final TextEditingController _confirmPasswordTextController =
-      TextEditingController();
+  Future<String> _authUserSignup(
+      String email, String password, String username, String status) {
+    return Future.delayed(const Duration(microseconds: 2250)).then((_) async {
+      try {
+        await Provider.of<Auth>(context, listen: false).signup(
+          email,
+          password,
+          username,
+          status,
+        );
+      } catch (err) {
+        return "An Errorerror occurred: ${err.toString()}";
+      }
+      return 'Register Success';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +48,12 @@ class _RegisterFormState extends State<RegisterForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
-            controller: _usernameTextController,
+            controller: _username,
             decoration: const InputDecoration(
+                icon: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
                 labelText: 'Username',
                 errorStyle: TextStyle(color: ColorPalette.textColorMM)),
             validator: (value) {
@@ -42,8 +65,12 @@ class _RegisterFormState extends State<RegisterForm> {
             onSaved: (value) {},
           ),
           TextFormField(
-            controller: _emailTextController,
+            controller: _email,
             decoration: const InputDecoration(
+                icon: Icon(
+                  Icons.email,
+                  color: Colors.white,
+                ),
                 labelText: 'Email',
                 errorStyle: TextStyle(color: ColorPalette.textColorMM)),
             autofocus: false,
@@ -56,9 +83,13 @@ class _RegisterFormState extends State<RegisterForm> {
             onSaved: (value) {},
           ),
           TextFormField(
-            controller: _passwordTextController,
+            controller: _password,
             obscureText: true,
             decoration: const InputDecoration(
+                icon: Icon(
+                  Icons.lock,
+                  color: Colors.white,
+                ),
                 labelText: 'Password',
                 errorStyle: TextStyle(color: ColorPalette.textColorMM)),
             validator: (value) {
@@ -70,22 +101,52 @@ class _RegisterFormState extends State<RegisterForm> {
             onSaved: (value) {},
           ),
           TextFormField(
-            controller: _confirmPasswordTextController,
+            controller: _confirmpassword,
             obscureText: true,
             decoration: const InputDecoration(
+              icon: Icon(
+                Icons.security,
+                color: Colors.white,
+              ),
               labelText: 'Confirm Password',
               errorStyle: TextStyle(color: ColorPalette.textColorMM),
             ),
             validator: (value) {
               if (value!.isEmpty) {
                 return 'Please enter your password';
-              } else if (_passwordTextController.text !=
-                  _confirmPasswordTextController.text) {
+              } else if (_password.text != _confirmpassword.text) {
                 return 'Please confirm password ';
               }
               return null;
             },
             onSaved: (value) {},
+          ),
+          Row(
+            children: [
+              const Icon(Icons.art_track, color: Colors.white),
+              const SizedBox(
+                width: 15,
+              ),
+              DropdownButton(
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                hint: Text(_selectItems.toString()),
+                items: const [
+                  DropdownMenuItem(
+                    value: "Customer",
+                    child: Text("Customer"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Seller",
+                    child: Text("Seller"),
+                  ),
+                ],
+                onChanged: (newvalue) {
+                  setState(() {
+                    _selectItems = newvalue.toString();
+                  });
+                },
+              ),
+            ],
           ),
           Row(
             children: [
@@ -96,18 +157,24 @@ class _RegisterFormState extends State<RegisterForm> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                              email: _emailTextController.text,
-                              password: _passwordTextController.text)
+                      _authUserSignup(_email.text, _password.text,
+                              _username.text, _selectItems.toString())
                           .then((value) {
-                        if (kDebugMode) {
-                          print('Create Account');
-                        }
-                        Navigator.pushNamed(context, Login.nameRoute);
-                      }).onError((error, stackTrace) {
-                        if (kDebugMode) {
-                          print('register error ${error.toString()}');
+                        if (value == 'Register Success') {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: ColorPalette.primaryColor,
+                            elevation: 0,
+                            behavior: SnackBarBehavior.floating,
+                            content: MassageSnackBar(msgError: value),
+                          ));
+                          Navigator.pushNamed(context, Login.nameRoute);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: ColorPalette.primaryColor,
+                            elevation: 0,
+                            behavior: SnackBarBehavior.floating,
+                            content: MassageSnackBar(msgError: value),
+                          ));
                         }
                       });
                     }

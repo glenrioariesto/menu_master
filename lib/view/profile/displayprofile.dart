@@ -13,8 +13,13 @@ class Displayprofile extends StatelessWidget {
         onPress: () {},
       ),
       Displayprof(
-        title: 'Saldo',
+        title: 'E-Wallet',
         icon: Icons.money,
+        onPress: () {},
+      ),
+      Displayprof(
+        title: 'Cart',
+        icon: Icons.shopping_bag,
         onPress: () {},
       ),
       Displayprof(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
-import 'package:menu_master/widgets/widgets_drawerhome.dart';
+import 'package:menu_master/view/profile/profile.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.title});
@@ -33,7 +33,19 @@ class _HomeState extends State<Home> {
               textAlign: TextAlign.center,
               style: const TextStyle(color: ColorPalette.textColorMM),
             ),
-            const SizedBox()
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Profile()));
+                },
+                icon: const Icon(Icons.person_2_outlined),
+                label: const Text("Profile"),
+                style: const ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll(ColorPalette.primaryColor)),
+              ),
+            )
           ],
         ),
         titleTextStyle: const TextStyle(
@@ -41,7 +53,6 @@ class _HomeState extends State<Home> {
           fontFamily: 'Climate Crisis',
         ),
       ),
-      endDrawer: const DrawerHome(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
