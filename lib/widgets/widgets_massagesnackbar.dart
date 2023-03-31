@@ -3,12 +3,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:menu_master/shared/constants.dart';
 
 class MassageSnackBar extends StatelessWidget {
-  const MassageSnackBar({
-    Key? key,
-    required this.msgError,
-  }) : super(key: key);
+  const MassageSnackBar({Key? key, required this.msgError, required this.msg})
+      : super(key: key);
 
   final String msgError;
+  final String msg;
 
   @override
   Widget build(BuildContext context) {
