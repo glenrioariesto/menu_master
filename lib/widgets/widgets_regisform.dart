@@ -17,15 +17,22 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameTextController = TextEditingController();
+  final TextEditingController _username = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmpassword = TextEditingController();
+  String? _selectItems = "Customer";
 
-  Future<String> _authUserSignup(String email, String password) {
+  Future<String> _authUserSignup(
+      String email, String password, String username, String status) {
     return Future.delayed(const Duration(microseconds: 2250)).then((_) async {
       try {
-        await Provider.of<Auth>(context, listen: false).signup(email, password);
+        await Provider.of<Auth>(context, listen: false).signup(
+          email,
+          password,
+          username,
+          status,
+        );
       } catch (err) {
         return "An Errorerror occurred: ${err.toString()}";
       }
@@ -41,8 +48,12 @@ class _RegisterFormState extends State<RegisterForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
-            controller: _usernameTextController,
+            controller: _username,
             decoration: const InputDecoration(
+                icon: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
                 labelText: 'Username',
                 errorStyle: TextStyle(color: ColorPalette.textColorMM)),
             validator: (value) {
@@ -56,6 +67,10 @@ class _RegisterFormState extends State<RegisterForm> {
           TextFormField(
             controller: _email,
             decoration: const InputDecoration(
+                icon: Icon(
+                  Icons.email,
+                  color: Colors.white,
+                ),
                 labelText: 'Email',
                 errorStyle: TextStyle(color: ColorPalette.textColorMM)),
             autofocus: false,
@@ -71,6 +86,10 @@ class _RegisterFormState extends State<RegisterForm> {
             controller: _password,
             obscureText: true,
             decoration: const InputDecoration(
+                icon: Icon(
+                  Icons.lock,
+                  color: Colors.white,
+                ),
                 labelText: 'Password',
                 errorStyle: TextStyle(color: ColorPalette.textColorMM)),
             validator: (value) {
@@ -85,6 +104,10 @@ class _RegisterFormState extends State<RegisterForm> {
             controller: _confirmpassword,
             obscureText: true,
             decoration: const InputDecoration(
+              icon: Icon(
+                Icons.security,
+                color: Colors.white,
+              ),
               labelText: 'Confirm Password',
               errorStyle: TextStyle(color: ColorPalette.textColorMM),
             ),
@@ -100,6 +123,33 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
           Row(
             children: [
+              const Icon(Icons.art_track, color: Colors.white),
+              const SizedBox(
+                width: 15,
+              ),
+              DropdownButton(
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                hint: Text(_selectItems.toString()),
+                items: const [
+                  DropdownMenuItem(
+                    value: "Customer",
+                    child: Text("Customer"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Seller",
+                    child: Text("Seller"),
+                  ),
+                ],
+                onChanged: (newvalue) {
+                  setState(() {
+                    _selectItems = newvalue.toString();
+                  });
+                },
+              ),
+            ],
+          ),
+          Row(
+            children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
@@ -107,9 +157,16 @@ class _RegisterFormState extends State<RegisterForm> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      _authUserSignup(_email.text, _password.text)
+                      _authUserSignup(_email.text, _password.text,
+                              _username.text, _selectItems.toString())
                           .then((value) {
-                        if (value == 'Login Success') {
+                        if (value == 'Register Success') {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: ColorPalette.primaryColor,
+                            elevation: 0,
+                            behavior: SnackBarBehavior.floating,
+                            content: MassageSnackBar(msgError: value),
+                          ));
                           Navigator.pushNamed(context, Login.nameRoute);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -120,21 +177,6 @@ class _RegisterFormState extends State<RegisterForm> {
                           ));
                         }
                       });
-
-                      // FirebaseAuth.instance
-                      //     .createUserWithEmailAndPassword(
-                      //         email: _email.text,
-                      //         password: _password.text)
-                      //     .then((value) {
-                      //   if (kDebugMode) {
-                      //     print('Create Account');
-                      //   }
-                      //   Navigator.pushNamed(context, Login.nameRoute);
-                      // }).onError((error, stackTrace) {
-                      //   if (kDebugMode) {
-                      //     print('register error ${error.toString()}');
-                      //   }
-                      // });
                     }
                   },
                   style: ButtonStyle(

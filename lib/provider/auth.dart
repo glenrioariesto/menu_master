@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../provider/akunprovider.dart';
+
 class Auth with ChangeNotifier {
   String? _idToken, userId;
   DateTime? _expiryDate;
@@ -33,7 +35,8 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> signup(String email, String password) async {
+  Future<void> signup(
+      String email, String password, String username, String status) async {
     Uri url = Uri.parse(
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDtPYC8gHOXCqk2fEhvy2i36JuIkQHEvsA");
 
@@ -59,6 +62,7 @@ class Auth with ChangeNotifier {
       _tempexpiryDate = DateTime.now().add(Duration(
         seconds: int.parse(responseData["expiresIn"]),
       ));
+      Akun.addDataAkun(username, status);
       notifyListeners();
     } catch (error) {
       rethrow;
@@ -94,5 +98,13 @@ class Auth with ChangeNotifier {
     } catch (error) {
       rethrow;
     }
+  }
+
+  void logout() {
+    _idToken = null;
+    userId = null;
+    _expiryDate = null;
+
+    notifyListeners();
   }
 }

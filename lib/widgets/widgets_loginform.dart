@@ -44,6 +44,10 @@ class _LoginFormState extends State<LoginForm> {
             TextFormField(
               controller: _email,
               decoration: const InputDecoration(
+                  icon: Icon(
+                    Icons.email,
+                    color: Colors.white,
+                  ),
                   labelText: 'Email',
                   errorStyle: TextStyle(color: ColorPalette.textColorMM)),
               validator: (value) {
@@ -58,6 +62,10 @@ class _LoginFormState extends State<LoginForm> {
               controller: _password,
               obscureText: true,
               decoration: const InputDecoration(
+                  icon: Icon(
+                    Icons.lock,
+                    color: Colors.white,
+                  ),
                   labelText: 'Password',
                   errorStyle: TextStyle(color: ColorPalette.textColorMM)),
               validator: (value) {
