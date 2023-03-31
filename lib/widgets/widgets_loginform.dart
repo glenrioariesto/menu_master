@@ -91,12 +91,15 @@ class _LoginFormState extends State<LoginForm> {
                           if (value == 'Login Success') {
                             Navigator.pushNamed(context, Home.nameRoute);
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              backgroundColor: ColorPalette.primaryColor,
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              content: MassageSnackBar(msgError: value),
-                            ));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: ColorPalette.primaryColor,
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                content: MassageSnackBar(
+                                    msgError: value, msg: "Oh Snap!!!"),
+                              ),
+                            );
                           }
                         });
                       }

@@ -165,7 +165,8 @@ class _RegisterFormState extends State<RegisterForm> {
                             backgroundColor: ColorPalette.primaryColor,
                             elevation: 0,
                             behavior: SnackBarBehavior.floating,
-                            content: MassageSnackBar(msgError: value),
+                            content: MassageSnackBar(
+                                msgError: value, msg: "welcome to menu master"),
                           ));
                           Navigator.pushNamed(context, Login.nameRoute);
                         } else {
@@ -173,7 +174,8 @@ class _RegisterFormState extends State<RegisterForm> {
                             backgroundColor: ColorPalette.primaryColor,
                             elevation: 0,
                             behavior: SnackBarBehavior.floating,
-                            content: MassageSnackBar(msgError: value),
+                            content: MassageSnackBar(
+                                msgError: value, msg: "Oh Snap!!!"),
                           ));
                         }
                       });
