@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
-import 'package:menu_master/view/profile/picprofile.dart';
+import 'package:menu_master/view/profile/seller/picprofileseller.dart';
 
 class Editprofileupdate extends StatelessWidget {
   Editprofileupdate({super.key});
