@@ -73,9 +73,6 @@ class MyApp extends StatelessWidget {
             HomeSeller.nameRoute: (context) =>
                 const HomeSeller(title: 'Menu Master'),
             Profileseller.nameRoute: (context) => const Profileseller(),
-            Login.nameRoute: (context) =>
-                const Login(title: 'Login Menu Master'),
-            Register.nameRoute: (context) => const Register(),
           },
         ),
       ),
