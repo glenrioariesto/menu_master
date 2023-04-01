@@ -30,9 +30,9 @@ class MassageSnackBar extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Oh Snap!!!",
-                      style: TextStyle(
+                    Text(
+                      msg,
+                      style: const TextStyle(
                         fontSize: 20,
                         color: Colors.white,
                       ),
