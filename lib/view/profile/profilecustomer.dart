@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
-import 'package:menu_master/view/profile/bodyprofile.dart';
+import 'package:menu_master/view/profile/bodyprofilecustomer.dart';
 
-class Profile extends StatelessWidget {
-  const Profile({super.key});
+class Profilecustomer extends StatelessWidget {
+  const Profilecustomer({super.key});
   static const nameRoute = '/profile';
   @override
   Widget build(BuildContext context) {

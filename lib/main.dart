@@ -1,15 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_master/provider/akunprovider.dart';
+import 'package:menu_master/view/homeseller.dart';
 
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
 import '../provider/product.dart';
 
-import '../view/profile/profile.dart';
+import '../view/profile/profilecustomer.dart';
+import '../view/profile/profileseller.dart';
 import '../view/login.dart';
 import '../view/register.dart';
-import '../view/home.dart';
+import '../view/homecustomer.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -48,8 +50,9 @@ class MyApp extends StatelessWidget {
               }
               return [
                 MaterialPageRoute(
-                    builder: (context) => const Home(title: 'Menu Master'),
-                    settings: const RouteSettings(name: Home.nameRoute))
+                    builder: (context) =>
+                        const HomeCustomer(title: 'Menu Master'),
+                    settings: const RouteSettings(name: HomeCustomer.nameRoute))
               ];
             }
             return [
@@ -59,8 +62,17 @@ class MyApp extends StatelessWidget {
             ];
           },
           routes: {
-            Home.nameRoute: (context) => const Home(title: 'Menu Master'),
-            Profile.nameRoute: (context) => const Profile(),
+            //custumer
+            HomeCustomer.nameRoute: (context) =>
+                const HomeCustomer(title: 'Menu Master'),
+            Profilecustomer.nameRoute: (context) => const Profilecustomer(),
+            Login.nameRoute: (context) =>
+                const Login(title: 'Login Menu Master'),
+            Register.nameRoute: (context) => const Register(),
+            //seller
+            HomeSeller.nameRoute: (context) =>
+                const HomeSeller(title: 'Menu Master'),
+            Profileseller.nameRoute: (context) => const Profileseller(),
             Login.nameRoute: (context) =>
                 const Login(title: 'Login Menu Master'),
             Register.nameRoute: (context) => const Register(),

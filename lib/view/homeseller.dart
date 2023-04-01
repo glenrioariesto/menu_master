@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
-import 'package:menu_master/view/profile/profile.dart';
+import 'package:menu_master/view/profile/profileseller.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key, required this.title});
+class HomeSeller extends StatefulWidget {
+  const HomeSeller({super.key, required this.title});
 
-  static const nameRoute = '/home';
+  static const nameRoute = '/homeseller';
   final String title;
 
   @override
-  State<Home> createState() => _HomeState();
+  State<HomeSeller> createState() => _HomeSellerState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeSellerState extends State<HomeSeller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,8 +36,10 @@ class _HomeState extends State<Home> {
             Center(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Profile()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Profileseller()));
                 },
                 icon: const Icon(Icons.person_2_outlined),
                 label: const Text("Profile"),

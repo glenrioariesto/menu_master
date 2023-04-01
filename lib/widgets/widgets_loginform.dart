@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../provider/auth.dart';
 
 import '../view/register.dart';
-import '../view/home.dart';
+import '../view/homecustomer.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -89,7 +89,8 @@ class _LoginFormState extends State<LoginForm> {
                           Provider.of<Auth>(context, listen: false).tempData();
                           // print(value);
                           if (value == 'Login Success') {
-                            Navigator.pushNamed(context, Home.nameRoute);
+                            Navigator.pushNamed(
+                                context, HomeCustomer.nameRoute);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
