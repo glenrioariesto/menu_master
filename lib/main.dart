@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:menu_master/provider/akunprovider.dart';
 
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
@@ -27,6 +28,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => Product(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => AkunProvider(),
         ),
       ],
       builder: (context, child) => Consumer<Auth>(

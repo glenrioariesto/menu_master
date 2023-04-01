@@ -1,16 +1,14 @@
 class AkunModel {
-  String name;
-  String email;
-  String password;
+  String id;
+  String username;
   String alamat;
   String imageUrl;
   String status;
 
   AkunModel(
-      {required this.name,
-      required this.email,
-      required this.password,
-      required this.alamat,
+      {required this.id,
+      required this.username,
       required this.status,
-      required this.imageUrl});
+      this.imageUrl = '',
+      this.alamat = ''});
 }

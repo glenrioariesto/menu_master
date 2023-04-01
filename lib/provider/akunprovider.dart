@@ -4,22 +4,28 @@ import 'package:http/http.dart' as http;
 
 import '../model/akunmodel.dart';
 
-class Akun with ChangeNotifier {
-  List<AkunModel> _allakun = [];
+class AkunProvider with ChangeNotifier {
+  final List<AkunModel> _allakun = [];
 
   List<AkunModel> get allAkun => _allakun;
 
-  static void addDataAkun(String username, String status) async {
+  void addDataAkun(String username, String status, String idToken) async {
     var url = Uri.parse(
         'https://menu-master-9c309-default-rtdb.firebaseio.com/akun.json');
-    var response = await http.post(
+    var response = await http
+        .post(
       url,
       body: json.encode({
-        "name": username,
-        'status': status,
+        "username": username,
+        "status": status,
+        "idtoken": idToken,
       }),
-    );
+    )
+        .then((response) {
+      _allakun.add(
+        AkunModel(username: username, status: status, id: idToken),
+      );
+    });
     //
-    print(response.statusCode);
   }
 }
