@@ -36,6 +36,7 @@ class MassageSnackBar extends StatelessWidget {
                         fontSize: 20,
                         color: Colors.white,
                       ),
+                      //
                     ),
                     const Spacer(),
                     Text(
