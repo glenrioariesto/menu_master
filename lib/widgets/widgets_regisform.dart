@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:menu_master/provider/akunprovider.dart';
 
 import '../shared/constants.dart';
 import '../widgets/widgets_massagesnackbar.dart';
@@ -26,17 +27,23 @@ class _RegisterFormState extends State<RegisterForm> {
   Future<String> _authUserSignup(
       String email, String password, String username, String status) {
     return Future.delayed(const Duration(microseconds: 2250)).then((_) async {
+      String idtoken = '';
       try {
-        await Provider.of<Auth>(context, listen: false).signup(
+        await Provider.of<Auth>(context, listen: false)
+            .signup(
           email,
           password,
           username,
           status,
-        );
+        )
+            .then((value) {
+          idtoken = value;
+        });
       } catch (err) {
+        print(err);
         return "An Errorerror occurred: ${err.toString()}";
       }
-      return 'Register Success';
+      return idtoken;
     });
   }
 
@@ -160,16 +167,23 @@ class _RegisterFormState extends State<RegisterForm> {
                       _authUserSignup(_email.text, _password.text,
                               _username.text, _selectItems.toString())
                           .then((value) {
-                        if (value == 'Register Success') {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: ColorPalette.primaryColor,
-                            elevation: 0,
-                            behavior: SnackBarBehavior.floating,
-                            content: MassageSnackBar(
-                                msgError: value, msg: "welcome to menu master"),
-                          ));
+                        if (value != '') {
+                          Provider.of<AkunProvider>(context, listen: false)
+                              .addDataAkun(
+                                  _username.text, _selectItems!, value);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: ColorPalette.primaryColor,
+                              elevation: 0,
+                              behavior: SnackBarBehavior.floating,
+                              content: MassageSnackBar(
+                                  msgError: 'Register Success',
+                                  msg: "welcome to menu master"),
+                            ),
+                          );
                           Navigator.pushNamed(context, Login.nameRoute);
                         } else {
+                          print(value);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: ColorPalette.primaryColor,
                             elevation: 0,

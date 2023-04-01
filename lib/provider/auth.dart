@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:http/http.dart' as http;
 import '../provider/akunprovider.dart';
 
 class Auth with ChangeNotifier {
+  Timer? _authTimer;
   String? _idToken, userId;
   DateTime? _expiryDate;
 
@@ -35,7 +37,7 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> signup(
+  Future<String> signup(
       String email, String password, String username, String status) async {
     Uri url = Uri.parse(
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDtPYC8gHOXCqk2fEhvy2i36JuIkQHEvsA");
@@ -62,8 +64,9 @@ class Auth with ChangeNotifier {
       _tempexpiryDate = DateTime.now().add(Duration(
         seconds: int.parse(responseData["expiresIn"]),
       ));
-      Akun.addDataAkun(username, status);
+      // akunProvider.addDataAkun(username, status, _tempidToken!);
       notifyListeners();
+      return _tempidToken!;
     } catch (error) {
       rethrow;
     }
@@ -94,6 +97,7 @@ class Auth with ChangeNotifier {
       _tempexpiryDate = DateTime.now().add(Duration(
         seconds: int.parse(responseData["expiresIn"]),
       ));
+      autologout();
       notifyListeners();
     } catch (error) {
       rethrow;
@@ -104,7 +108,19 @@ class Auth with ChangeNotifier {
     _idToken = null;
     userId = null;
     _expiryDate = null;
+    if (_authTimer != null) {
+      _authTimer!.cancel();
+      _authTimer = null;
+    }
 
     notifyListeners();
+  }
+
+  void autologout() {
+    if (_authTimer != null) {
+      _authTimer!.cancel();
+    }
+    final timeToExpiry = _tempexpiryDate!.difference(DateTime.now()).inSeconds;
+    _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
 }
