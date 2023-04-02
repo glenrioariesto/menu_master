@@ -9,6 +9,6 @@ class AkunModel {
       {required this.id,
       required this.username,
       required this.status,
-      this.imageUrl = '',
-      this.alamat = ''});
+      required this.imageUrl,
+      required this.alamat});
 }

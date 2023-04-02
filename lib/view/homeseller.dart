@@ -60,7 +60,7 @@ class _HomeSellerState extends State<HomeSeller> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[
             Text(
-              'Home Page',
+              'Home Page Seller',
             ),
           ],
         ),

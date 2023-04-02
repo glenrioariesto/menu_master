@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
 
+import 'package:provider/provider.dart';
+import '../../../provider/auth.dart';
+
+import 'package:menu_master/view/login.dart';
+
 class Displayprofile extends StatelessWidget {
   const Displayprofile({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context, listen: false);
+
     return Column(children: [
       //display
       Displayprof(
@@ -36,7 +44,16 @@ class Displayprofile extends StatelessWidget {
         title: 'Logout',
         icon: Icons.logout_outlined,
         textColor: ColorPalette.primaryColor,
-        onPress: () {},
+        onPress: () {
+          auth.logout();
+
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const Login(
+                        title: "Menu Master",
+                      )));
+        },
         endIcon: false,
       )
     ]);

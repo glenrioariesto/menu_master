@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:menu_master/provider/akunprovider.dart';
+import 'package:menu_master/view/homeseller.dart';
 
 import '../widgets/widgets_massagesnackbar.dart';
 import '../shared/constants.dart';
@@ -34,6 +36,9 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final akunProv = Provider.of<AkunProvider>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
+
     return Form(
       key: _formKey,
       child: Padding(
@@ -86,11 +91,26 @@ class _LoginFormState extends State<LoginForm> {
                         _formKey.currentState!.save();
                         _authUserLogin(_email.text, _password.text)
                             .then((value) {
-                          Provider.of<Auth>(context, listen: false).tempData();
+                          auth.tempData();
                           // print(value);
                           if (value == 'Login Success') {
-                            Navigator.pushNamed(
-                                context, HomeCustomer.nameRoute);
+                            CircularProgressIndicator();
+                            akunProv.getDataAkun().then((value) async {
+                              var status = akunProv.allAkun;
+                              for (int i = 0; i < status.length; i++) {
+                                final akun = status[i];
+                                if (akun.id == auth.userId) {
+                                  if (akun.status == "Customer") {
+                                    return Navigator.pushNamed(
+                                        context, HomeCustomer.nameRoute);
+                                  } else {
+                                    return Navigator.pushNamed(
+                                        context, HomeSeller.nameRoute);
+                                  }
+                                }
+                              }
+                              print("data tidak ada");
+                            });
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

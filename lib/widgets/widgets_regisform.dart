@@ -23,6 +23,7 @@ class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmpassword = TextEditingController();
   String? _selectItems = "Customer";
+  String msg = '';
 
   Future<String> _authUserSignup(
       String email, String password, String username, String status) {
@@ -38,6 +39,7 @@ class _RegisterFormState extends State<RegisterForm> {
         )
             .then((value) {
           idtoken = value;
+          msg = 'Register Success';
         });
       } catch (err) {
         print(err);
@@ -167,20 +169,22 @@ class _RegisterFormState extends State<RegisterForm> {
                       _authUserSignup(_email.text, _password.text,
                               _username.text, _selectItems.toString())
                           .then((value) {
-                        if (value != '') {
+                        if (msg == 'Register Success') {
                           Provider.of<AkunProvider>(context, listen: false)
-                              .addDataAkun(
-                                  _username.text, _selectItems!, value);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: ColorPalette.primaryColor,
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              content: MassageSnackBar(
-                                  msgError: 'Register Success',
-                                  msg: "welcome to menu master"),
-                            ),
-                          );
+                              .addDataAkun(_username.text, _selectItems!, value)
+                              .then((value) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: ColorPalette.primaryColor,
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                content: MassageSnackBar(
+                                    msgError: 'Register Success',
+                                    msg: "welcome to menu master"),
+                              ),
+                            );
+                          });
+
                           Navigator.pushNamed(context, Login.nameRoute);
                         } else {
                           print(value);
