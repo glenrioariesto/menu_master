@@ -7,8 +7,10 @@ class Body extends StatelessWidget {
   const Body({super.key});
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [Picprofile(), Editprofile(), Displayprofile()],
+    return SingleChildScrollView(
+      child: Column(
+        children: const [Picprofile(), Editprofile(), Displayprofile()],
+      ),
     );
   }
 }

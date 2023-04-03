@@ -8,16 +8,17 @@ import '../provider/akunprovider.dart';
 
 class Auth with ChangeNotifier {
   Timer? _authTimer;
-  String? _idToken, userId;
+  String? _idToken, userId, email;
   DateTime? _expiryDate;
 
-  String? _tempidToken, tempuserId;
+  String? _tempidToken, tempuserId, _tempemail;
   DateTime? _tempexpiryDate;
 
   void tempData() {
     _idToken = _tempidToken;
     userId = tempuserId;
     _expiryDate = _tempexpiryDate;
+    email = _tempemail;
     // print(token);
     // print(isAuth);
     notifyListeners();
@@ -37,7 +38,7 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<String> signup(
+  Future<void> signup(
       String email, String password, String username, String status) async {
     Uri url = Uri.parse(
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDtPYC8gHOXCqk2fEhvy2i36JuIkQHEvsA");
@@ -59,6 +60,7 @@ class Auth with ChangeNotifier {
         throw responseData['error']['message'];
       }
 
+      _tempemail = responseData["email"];
       _tempidToken = responseData["idToken"];
       tempuserId = responseData["localId"];
       _tempexpiryDate = DateTime.now().add(Duration(
@@ -66,7 +68,6 @@ class Auth with ChangeNotifier {
       ));
       // akunProvider.addDataAkun(username, status, _tempidToken!);
       notifyListeners();
-      return _tempidToken!;
     } catch (error) {
       rethrow;
     }
@@ -92,11 +93,14 @@ class Auth with ChangeNotifier {
       if (responseData['error'] != null) {
         throw responseData['error']['message'];
       }
+
+      _tempemail = responseData["email"];
       _tempidToken = responseData["idToken"];
       tempuserId = responseData["localId"];
       _tempexpiryDate = DateTime.now().add(Duration(
         seconds: int.parse(responseData["expiresIn"]),
       ));
+
       autologout();
       notifyListeners();
     } catch (error) {
@@ -122,5 +126,35 @@ class Auth with ChangeNotifier {
     }
     final timeToExpiry = _tempexpiryDate!.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
+  }
+
+  Future<void> changeEmail(String email, String password) async {
+    Uri url = Uri.parse(
+        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDtPYC8gHOXCqk2fEhvy2i36JuIkQHEvsA");
+    try {
+      var response = await http.post(
+        url,
+        body: json.encode(
+          {
+            "email": email,
+            "password": password,
+            "returnSecureToken": false,
+            "idToken": _idToken,
+          },
+        ),
+      );
+
+      var responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        print(responseData);
+
+        throw responseData['error']['message'];
+      }
+      _tempemail = responseData["email"];
+
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
   }
 }

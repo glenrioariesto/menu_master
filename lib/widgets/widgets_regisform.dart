@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:menu_master/provider/akunprovider.dart';
 
 import '../shared/constants.dart';
 import '../widgets/widgets_massagesnackbar.dart';
 
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
+import '../provider/akunprovider.dart';
 
 import '../view/login.dart';
 
@@ -27,28 +27,25 @@ class _RegisterFormState extends State<RegisterForm> {
   Future<String> _authUserSignup(
       String email, String password, String username, String status) {
     return Future.delayed(const Duration(microseconds: 2250)).then((_) async {
-      String idtoken = '';
       try {
-        await Provider.of<Auth>(context, listen: false)
-            .signup(
+        await Provider.of<Auth>(context, listen: false).signup(
           email,
           password,
           username,
           status,
-        )
-            .then((value) {
-          idtoken = value;
-        });
+        );
       } catch (err) {
-        print(err);
         return "An Errorerror occurred: ${err.toString()}";
       }
-      return idtoken;
+      return "Register Success";
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final akunProv = Provider.of<AkunProvider>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
+
     return Form(
       key: _formKey,
       child: Column(
@@ -167,23 +164,28 @@ class _RegisterFormState extends State<RegisterForm> {
                       _authUserSignup(_email.text, _password.text,
                               _username.text, _selectItems.toString())
                           .then((value) {
-                        if (value != '') {
-                          Provider.of<AkunProvider>(context, listen: false)
+                        auth.tempData();
+                        if (value == 'Register Success') {
+                          akunProv
                               .addDataAkun(
-                                  _username.text, _selectItems!, value);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: ColorPalette.primaryColor,
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              content: MassageSnackBar(
-                                  msgError: 'Register Success',
-                                  msg: "welcome to menu master"),
-                            ),
-                          );
+                                  _username.text,
+                                  _selectItems.toString(),
+                                  auth.userId.toString())
+                              .then((value) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: ColorPalette.primaryColor,
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                content: MassageSnackBar(
+                                    msgError: 'Register Success',
+                                    msg: "welcome to menu master"),
+                              ),
+                            );
+                          });
+
                           Navigator.pushNamed(context, Login.nameRoute);
                         } else {
-                          print(value);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: ColorPalette.primaryColor,
                             elevation: 0,

@@ -5,9 +5,11 @@ import '../shared/constants.dart';
 
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
+import '../provider/akunprovider.dart';
 
 import '../view/register.dart';
 import '../view/homecustomer.dart';
+import '../view/homeseller.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -34,6 +36,9 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final akunProv = Provider.of<AkunProvider>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
+
     return Form(
       key: _formKey,
       child: Padding(
@@ -86,11 +91,23 @@ class _LoginFormState extends State<LoginForm> {
                         _formKey.currentState!.save();
                         _authUserLogin(_email.text, _password.text)
                             .then((value) {
-                          Provider.of<Auth>(context, listen: false).tempData();
+                          auth.tempData();
                           // print(value);
                           if (value == 'Login Success') {
-                            Navigator.pushNamed(
-                                context, HomeCustomer.nameRoute);
+                            const CircularProgressIndicator();
+                            akunProv.getDataById(auth.userId!).then((value) {
+                              var status = akunProv.allAkun;
+                              for (int i = 0; i < status.length; i++) {
+                                final akun = status[i];
+                                if (akun.status == "Customer") {
+                                  return Navigator.pushNamed(
+                                      context, HomeCustomer.nameRoute);
+                                } else {
+                                  return Navigator.pushNamed(
+                                      context, HomeSeller.nameRoute);
+                                }
+                              }
+                            });
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

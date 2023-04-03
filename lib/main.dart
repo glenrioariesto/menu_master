@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           title: 'Menu Master',
           initialRoute: Login.nameRoute,
           onGenerateInitialRoutes: (set) {
-            if (auth.isAuth) {
+            if (auth.isAuth != false) {
               if (kDebugMode) {
                 print(set);
               }

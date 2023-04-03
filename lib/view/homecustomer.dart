@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
 import 'package:menu_master/view/profile/profilecustomer.dart';
 
+import 'package:provider/provider.dart';
+import '../provider/auth.dart';
+
 class HomeCustomer extends StatefulWidget {
   const HomeCustomer({super.key, required this.title});
 
@@ -15,6 +18,7 @@ class HomeCustomer extends StatefulWidget {
 class _HomeCustomerState extends State<HomeCustomer> {
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -36,6 +40,7 @@ class _HomeCustomerState extends State<HomeCustomer> {
             Center(
               child: ElevatedButton.icon(
                 onPressed: () {
+                  auth.tempData();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
