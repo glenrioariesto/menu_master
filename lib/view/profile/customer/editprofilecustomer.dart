@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
+
+import 'package:menu_master/model/akunmodel.dart';
+
+import 'package:provider/provider.dart';
+import '../../../provider/akunprovider.dart';
+import '../../../provider/auth.dart';
+
 import 'package:menu_master/view/profile/customer/editprofileupdatecustomer.dart';
 
 class Editprofile extends StatelessWidget {
   const Editprofile({super.key});
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context, listen: false);
+    final akunProv = Provider.of<AkunProvider>(context, listen: false);
+
+    akunProv.getDataById(auth.userId.toString());
+    AkunModel akun = akunProv.selectById(auth.userId.toString());
+
     return Column(
       children: [
         const SizedBox(
           height: 30,
         ),
-        const Text(
-          "Mamed Kudasi",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        Text(
+          akun.username,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        const Text("AFAFGaming123@gmail.com"),
+        Text(auth.email.toString()),
         const SizedBox(
           height: 10,
         ),
@@ -26,6 +39,7 @@ class Editprofile extends StatelessWidget {
                     backgroundColor:
                         MaterialStatePropertyAll(ColorPalette.primaryColor)),
                 onPressed: () {
+                  auth.tempData();
                   Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -9,28 +9,33 @@ class AkunProvider with ChangeNotifier {
 
   List<AkunModel> get allAkun => _allakun;
 
+  String urlmenumaster =
+      "https://menu-master-9c309-default-rtdb.firebaseio.com";
+
+  AkunModel selectById(String id) {
+    return _allakun.firstWhere((element) => element.id == id);
+  }
+
   Future<void> addDataAkun(
       String username, String status, String userId) async {
     try {
-      var url = Uri.parse(
-          'https://menu-master-9c309-default-rtdb.firebaseio.com/akun.json');
-      var response = await http.post(
+      var url = Uri.parse("$urlmenumaster/akun/$userId.json");
+      var response = await http.put(
         url,
         body: json.encode({
           "username": username,
           "status": status,
-          "userId": userId,
-          "alamat": "",
+          "address": "",
           "imageUrl": ''
         }),
       );
       if (response.statusCode == 200) {
         _allakun.add(
           AkunModel(
+              id: userId,
               username: username,
               status: status,
-              id: userId,
-              alamat: '',
+              address: '',
               imageUrl: ''),
         );
         notifyListeners();
@@ -42,10 +47,37 @@ class AkunProvider with ChangeNotifier {
     }
   }
 
+  Future<void> getDataById(String userId) async {
+    var url = Uri.parse('$urlmenumaster/akun.json');
+    try {
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body) as Map<String, dynamic>;
+
+        _allakun.clear();
+        data.forEach((key, value) {
+          if (userId == key) {
+            _allakun.add(
+              AkunModel(
+                id: key,
+                username: value['username'],
+                status: value['status'],
+                address: value['address'],
+                imageUrl: value['imageUrl'],
+              ),
+            );
+          }
+        });
+        notifyListeners();
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
   Future<void> getDataAkun() async {
-    var url = Uri.parse(
-      'https://menu-master-9c309-default-rtdb.firebaseio.com/akun.json',
-    );
+    var url = Uri.parse("$urlmenumaster/akun.json");
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var data = json.decode(response.body) as Map<String, dynamic>;
@@ -55,8 +87,8 @@ class AkunProvider with ChangeNotifier {
           AkunModel(
             username: value['username'],
             status: value['status'],
-            id: value['userId'],
-            alamat: value['alamat'],
+            id: data["name"],
+            address: value['address'],
             imageUrl: value['imageUrl'],
           ),
         );
@@ -67,16 +99,27 @@ class AkunProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateDataAkun(AkunModel akun) async {
+  Future<void> updateDataAkun(
+      String address, String username, String userId) async {
     var url = Uri.parse(
-      'https://menu-master-9c309-default-rtdb.firebaseio.com/akun/${akun.id}.json',
+      '$urlmenumaster/akun/$userId.json',
     );
+
+    getDataById(userId);
+    AkunModel akun = selectById(userId);
+    String image = '';
+    if (akun.imageUrl != '') {
+      image = akun.imageUrl;
+    }
+
+    print(userId);
     var response = await http.put(
       url,
       body: json.encode({
-        'username': akun.username,
-        'status': akun.status,
-        'userId': akun.id,
+        "username": username,
+        "status": akun.status,
+        "address": address,
+        "imageUrl": image
       }),
     );
     if (response.statusCode != 200) {

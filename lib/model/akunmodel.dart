@@ -1,7 +1,7 @@
 class AkunModel {
   String id;
   String username;
-  String alamat;
+  String address;
   String imageUrl;
   String status;
 
@@ -10,5 +10,5 @@ class AkunModel {
       required this.username,
       required this.status,
       required this.imageUrl,
-      required this.alamat});
+      required this.address});
 }

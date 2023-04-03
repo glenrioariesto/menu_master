@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
 import 'package:menu_master/view/profile/profileseller.dart';
 
+import 'package:provider/provider.dart';
+import '../provider/auth.dart';
+
 class HomeSeller extends StatefulWidget {
   const HomeSeller({super.key, required this.title});
 
@@ -15,6 +18,8 @@ class HomeSeller extends StatefulWidget {
 class _HomeSellerState extends State<HomeSeller> {
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -36,6 +41,8 @@ class _HomeSellerState extends State<HomeSeller> {
             Center(
               child: ElevatedButton.icon(
                 onPressed: () {
+                  auth.tempData();
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(

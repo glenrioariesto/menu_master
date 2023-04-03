@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:menu_master/provider/akunprovider.dart';
-import 'package:menu_master/view/homeseller.dart';
 
 import '../widgets/widgets_massagesnackbar.dart';
 import '../shared/constants.dart';
 
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
+import '../provider/akunprovider.dart';
 
 import '../view/register.dart';
 import '../view/homecustomer.dart';
+import '../view/homeseller.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -94,22 +94,19 @@ class _LoginFormState extends State<LoginForm> {
                           auth.tempData();
                           // print(value);
                           if (value == 'Login Success') {
-                            CircularProgressIndicator();
-                            akunProv.getDataAkun().then((value) async {
+                            const CircularProgressIndicator();
+                            akunProv.getDataById(auth.userId!).then((value) {
                               var status = akunProv.allAkun;
                               for (int i = 0; i < status.length; i++) {
                                 final akun = status[i];
-                                if (akun.id == auth.userId) {
-                                  if (akun.status == "Customer") {
-                                    return Navigator.pushNamed(
-                                        context, HomeCustomer.nameRoute);
-                                  } else {
-                                    return Navigator.pushNamed(
-                                        context, HomeSeller.nameRoute);
-                                  }
+                                if (akun.status == "Customer") {
+                                  return Navigator.pushNamed(
+                                      context, HomeCustomer.nameRoute);
+                                } else {
+                                  return Navigator.pushNamed(
+                                      context, HomeSeller.nameRoute);
                                 }
                               }
-                              print("data tidak ada");
                             });
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
