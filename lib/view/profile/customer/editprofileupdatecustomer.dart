@@ -47,8 +47,8 @@ class Editprofileupdate extends StatelessWidget {
                       decoration: InputDecoration(
                           hintText: akun.username,
                           labelText: 'Input New Username',
-                          errorStyle:
-                              const TextStyle(color: ColorPalette.textColorMM)),
+                          errorStyle: const TextStyle(
+                              color: ColorPalette.primaryColor)),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your new Username';
@@ -62,8 +62,8 @@ class Editprofileupdate extends StatelessWidget {
                       decoration: InputDecoration(
                           hintText: auth.email,
                           labelText: 'Input New Email',
-                          errorStyle:
-                              const TextStyle(color: ColorPalette.textColorMM)),
+                          errorStyle: const TextStyle(
+                              color: ColorPalette.primaryColor)),
                       autofocus: false,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -79,7 +79,7 @@ class Editprofileupdate extends StatelessWidget {
                       decoration: const InputDecoration(
                           labelText: 'New Password',
                           errorStyle:
-                              TextStyle(color: ColorPalette.textColorMM)),
+                              TextStyle(color: ColorPalette.primaryColor)),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your New password';
@@ -96,7 +96,7 @@ class Editprofileupdate extends StatelessWidget {
                             : 'there is no address yet',
                         labelText: 'New Address',
                         errorStyle:
-                            const TextStyle(color: ColorPalette.textColorMM),
+                            const TextStyle(color: ColorPalette.primaryColor),
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {

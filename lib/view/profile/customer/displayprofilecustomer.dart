@@ -28,11 +28,7 @@ class Displayprofile extends StatelessWidget {
         icon: Icons.shopping_bag,
         onPress: () {},
       ),
-      Displayprof(
-        title: 'User Management',
-        icon: Icons.chrome_reader_mode_outlined,
-        onPress: () {},
-      ),
+
       Displayprof(
         title: 'Information',
         icon: Icons.info_rounded,

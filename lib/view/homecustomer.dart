@@ -4,6 +4,7 @@ import 'package:menu_master/view/profile/profilecustomer.dart';
 
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
+import '../widgets/widgets_product_grid.dart';
 
 class HomeCustomer extends StatefulWidget {
   const HomeCustomer({super.key, required this.title});
@@ -60,12 +61,18 @@ class _HomeCustomerState extends State<HomeCustomer> {
           fontFamily: 'Climate Crisis',
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'Home Page',
+          children: [
+            Container(
+              color: ColorPalette.backgroundColor,
+              height: 200,
+              width: double.infinity,
+              child: Text("carousel image", textAlign: TextAlign.center),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: ProductGrid(),
             ),
           ],
         ),

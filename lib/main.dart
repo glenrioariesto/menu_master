@@ -2,10 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_master/provider/akunprovider.dart';
 import 'package:menu_master/view/homeseller.dart';
+import 'package:menu_master/view/product/product_detail.dart';
 
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
-import '../provider/product.dart';
+import 'provider/products.dart';
 
 import '../view/profile/profilecustomer.dart';
 import '../view/profile/profileseller.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Auth(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => Product(),
+          create: (ctx) => Products(),
         ),
         ChangeNotifierProvider(
           create: (ctx) => AkunProvider(),
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
             HomeSeller.nameRoute: (context) =>
                 const HomeSeller(title: 'Menu Master'),
             Profileseller.nameRoute: (context) => const Profileseller(),
+            ProductDetailView.nameRoute: (context) => const ProductDetailView(),
           },
         ),
       ),
