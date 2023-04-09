@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
-import 'package:menu_master/view/profile/profileseller.dart';
 
 import 'package:provider/provider.dart';
 import '../provider/auth.dart';
+import '../widgets/widgets_product_grid.dart';
+import '../view/profile/profileseller.dart';
 
 class HomeSeller extends StatefulWidget {
   const HomeSeller({super.key, required this.title});
@@ -62,12 +63,18 @@ class _HomeSellerState extends State<HomeSeller> {
           fontFamily: 'Climate Crisis',
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'Home Page Seller',
+          children: [
+            Container(
+              color: ColorPalette.backgroundColor,
+              height: 200,
+              width: double.infinity,
+              child: Text("carousel image", textAlign: TextAlign.center),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: ProductGrid(),
             ),
           ],
         ),

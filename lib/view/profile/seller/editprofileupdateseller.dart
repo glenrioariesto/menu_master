@@ -12,6 +12,8 @@ import 'package:menu_master/view/profile/seller/picprofileseller.dart';
 
 class Editprofileupdate extends StatelessWidget {
   Editprofileupdate({super.key});
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _changeUsernameTC = TextEditingController();
   final TextEditingController _changeEmailTC = TextEditingController();
   final TextEditingController _changePasswordTC = TextEditingController();
@@ -38,6 +40,7 @@ class Editprofileupdate extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(30),
               child: Form(
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -46,8 +49,8 @@ class Editprofileupdate extends StatelessWidget {
                       decoration: InputDecoration(
                           hintText: akun.username,
                           labelText: 'Input New Username',
-                          errorStyle:
-                              const TextStyle(color: ColorPalette.textColorMM)),
+                          errorStyle: const TextStyle(
+                              color: ColorPalette.primaryColor)),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your new Username';
@@ -61,8 +64,8 @@ class Editprofileupdate extends StatelessWidget {
                       decoration: InputDecoration(
                           hintText: auth.email,
                           labelText: 'Input New Email',
-                          errorStyle:
-                              const TextStyle(color: ColorPalette.textColorMM)),
+                          errorStyle: const TextStyle(
+                              color: ColorPalette.primaryColor)),
                       autofocus: false,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -78,7 +81,7 @@ class Editprofileupdate extends StatelessWidget {
                       decoration: const InputDecoration(
                           labelText: 'New Password',
                           errorStyle:
-                              TextStyle(color: ColorPalette.textColorMM)),
+                              TextStyle(color: ColorPalette.primaryColor)),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your New password';
@@ -95,7 +98,7 @@ class Editprofileupdate extends StatelessWidget {
                             : 'there is no address yet',
                         labelText: 'New Address',
                         errorStyle:
-                            const TextStyle(color: ColorPalette.textColorMM),
+                            const TextStyle(color: ColorPalette.primaryColor),
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -110,24 +113,27 @@ class Editprofileupdate extends StatelessWidget {
                       child: ElevatedButton(
                         autofocus: true,
                         onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (ctx) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              });
-                          auth.changeEmail(
-                              _changeEmailTC.text, _changePasswordTC.text);
-                          akunProv
-                              .updateDataAkun(
-                                  _changeAlamatTC.text,
-                                  _changeUsernameTC.text,
-                                  auth.userId.toString())
-                              .then((value) {
-                            auth.tempData();
-                            Navigator.pushReplacementNamed(
-                                context, HomeSeller.nameRoute);
-                          });
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            showDialog(
+                                context: context,
+                                builder: (ctx) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                });
+                            auth.changeEmail(
+                                _changeEmailTC.text, _changePasswordTC.text);
+                            akunProv
+                                .updateDataAkun(
+                                    _changeAlamatTC.text,
+                                    _changeUsernameTC.text,
+                                    auth.userId.toString())
+                                .then((value) {
+                              auth.tempData();
+                              Navigator.pushReplacementNamed(
+                                  context, HomeSeller.nameRoute);
+                            });
+                          }
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(

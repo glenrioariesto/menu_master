@@ -4,7 +4,8 @@ import 'package:menu_master/shared/constants.dart';
 import 'package:provider/provider.dart';
 import '../../../provider/auth.dart';
 
-import 'package:menu_master/view/login.dart';
+import '../../../view/profile/seller/seller_management.dart';
+import '../../../view/login.dart';
 
 class Displayprofile extends StatelessWidget {
   const Displayprofile({super.key});
@@ -25,15 +26,14 @@ class Displayprofile extends StatelessWidget {
         icon: Icons.money,
         onPress: () {},
       ),
-      Displayprof(
-        title: 'Cart',
-        icon: Icons.shopping_bag,
-        onPress: () {},
-      ),
+
       Displayprof(
         title: 'User Management',
         icon: Icons.chrome_reader_mode_outlined,
-        onPress: () {},
+        onPress: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SellerManagement()));
+        },
       ),
       Displayprof(
         title: 'Information',
