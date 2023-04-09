@@ -124,6 +124,7 @@ class Editprofileupdate extends StatelessWidget {
                                   _changeUsernameTC.text,
                                   auth.userId.toString())
                               .then((value) {
+                            auth.tempData();
                             Navigator.pushReplacementNamed(
                                 context, HomeSeller.nameRoute);
                           });
