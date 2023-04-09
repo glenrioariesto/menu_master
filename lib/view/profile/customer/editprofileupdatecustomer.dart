@@ -12,6 +12,8 @@ import 'package:menu_master/view/profile/customer/picprofilecustomer.dart';
 
 class Editprofileupdate extends StatelessWidget {
   Editprofileupdate({super.key});
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _changeUsernameTC = TextEditingController();
   final TextEditingController _changeEmailTC = TextEditingController();
   final TextEditingController _changePasswordTC = TextEditingController();
@@ -36,6 +38,7 @@ class Editprofileupdate extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(30),
               child: Form(
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -108,23 +111,28 @@ class Editprofileupdate extends StatelessWidget {
                       child: ElevatedButton(
                         autofocus: true,
                         onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (ctx) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              });
-                          auth.changeEmail(
-                              _changeEmailTC.text, _changePasswordTC.text);
-                          akunProv
-                              .updateDataAkun(
-                                  _changeAlamatTC.text,
-                                  _changeUsernameTC.text,
-                                  auth.userId.toString())
-                              .then((value) {
-                            Navigator.pushReplacementNamed(
-                                context, HomeCustomer.nameRoute);
-                          });
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+
+                            showDialog(
+                                context: context,
+                                builder: (ctx) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                });
+                            auth.changeEmail(
+                                _changeEmailTC.text, _changePasswordTC.text);
+                            akunProv
+                                .updateDataAkun(
+                                    _changeAlamatTC.text,
+                                    _changeUsernameTC.text,
+                                    auth.userId.toString())
+                                .then((value) {
+                              auth.tempData();
+                              Navigator.pushReplacementNamed(
+                                  context, HomeCustomer.nameRoute);
+                            });
+                          }
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(

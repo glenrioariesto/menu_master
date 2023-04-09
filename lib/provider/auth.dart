@@ -66,7 +66,6 @@ class Auth with ChangeNotifier {
       _tempexpiryDate = DateTime.now().add(Duration(
         seconds: int.parse(responseData["expiresIn"]),
       ));
-      // akunProvider.addDataAkun(username, status, _tempidToken!);
       notifyListeners();
     } catch (error) {
       rethrow;
@@ -132,27 +131,33 @@ class Auth with ChangeNotifier {
     Uri url = Uri.parse(
         "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDtPYC8gHOXCqk2fEhvy2i36JuIkQHEvsA");
     try {
-      var response = await http.post(
-        url,
-        body: json.encode(
-          {
-            "email": email,
-            "password": password,
-            "returnSecureToken": false,
-            "idToken": _idToken,
-          },
-        ),
-      );
+      if (email != '' || password != '') {
+        var response = await http.post(
+          url,
+          body: json.encode(
+            {
+              "email": email,
+              "password": password,
+              "returnSecureToken": false,
+              "idToken": _idToken,
+            },
+          ),
+        );
 
-      var responseData = json.decode(response.body);
-      if (responseData['error'] != null) {
-        print(responseData);
+        var responseData = json.decode(response.body);
+        if (responseData['error'] != null) {
+          print(responseData);
 
-        throw responseData['error']['message'];
+          throw responseData['error']['message'];
+        }
+        _tempidToken = responseData["idToken"];
+        _tempemail = responseData["email"];
+        _tempexpiryDate = DateTime.now().add(Duration(
+          seconds: int.parse(responseData["expiresIn"]),
+        ));
+
+        notifyListeners();
       }
-      _tempemail = responseData["email"];
-
-      notifyListeners();
     } catch (error) {
       rethrow;
     }

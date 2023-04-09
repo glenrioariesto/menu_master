@@ -20,6 +20,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
@@ -28,6 +29,7 @@ class _LoginFormState extends State<LoginForm> {
       try {
         await Provider.of<Auth>(context, listen: false).login(email, password);
       } catch (err) {
+        print(err);
         return "An Errorerror occurred: ${err.toString()}";
       }
       return 'Login Success';

@@ -43,7 +43,7 @@ class AkunProvider with ChangeNotifier {
         throw Exception('Failed to add data');
       }
     } catch (error) {
-      throw error;
+      rethrow;
     }
   }
 
@@ -72,7 +72,8 @@ class AkunProvider with ChangeNotifier {
         notifyListeners();
       }
     } catch (err) {
-      throw err;
+      print(err);
+      rethrow;
     }
   }
 
@@ -107,18 +108,22 @@ class AkunProvider with ChangeNotifier {
 
     getDataById(userId);
     AkunModel akun = selectById(userId);
-    String image = '';
-    if (akun.imageUrl != '') {
-      image = akun.imageUrl;
+    String image = akun.imageUrl;
+    String adr = akun.address;
+    String usernm = akun.username;
+
+    if (address != '') {
+      adr = address;
+    } else if (username != '') {
+      usernm = username;
     }
 
-    print(userId);
     var response = await http.put(
       url,
       body: json.encode({
-        "username": username,
+        "username": usernm,
         "status": akun.status,
-        "address": address,
+        "address": adr,
         "imageUrl": image
       }),
     );
