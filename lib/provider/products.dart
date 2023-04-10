@@ -11,7 +11,8 @@ class Products with ChangeNotifier {
   String baseurl = "https://menu-master-9c309-default-rtdb.firebaseio.com";
 
   Product selectById(String id) {
-    return _allproduct.firstWhere((element) => element.id == id);
+    return _allproduct.firstWhere((element) => element.id == id,
+        orElse: () => null as Product);
   }
 
   Future<void> addProduct(

@@ -131,7 +131,10 @@ class Auth with ChangeNotifier {
     Uri url = Uri.parse(
         "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDtPYC8gHOXCqk2fEhvy2i36JuIkQHEvsA");
     try {
-      if (email != '' || password != '') {
+      if (email != null &&
+          password != null &&
+          email.isNotEmpty &&
+          password.isNotEmpty) {
         var response = await http.post(
           url,
           body: json.encode(
@@ -151,6 +154,7 @@ class Auth with ChangeNotifier {
           throw responseData['error']['message'];
         }
         _tempidToken = responseData["idToken"];
+        tempuserId = responseData["localId"];
         _tempemail = responseData["email"];
         _tempexpiryDate = DateTime.now().add(Duration(
           seconds: int.parse(responseData["expiresIn"]),
