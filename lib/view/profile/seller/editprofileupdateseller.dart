@@ -100,12 +100,6 @@ class Editprofileupdate extends StatelessWidget {
                         errorStyle:
                             const TextStyle(color: ColorPalette.primaryColor),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your new adress';
-                        }
-                        return null;
-                      },
                       onSaved: (value) {},
                     ),
                     Padding(
