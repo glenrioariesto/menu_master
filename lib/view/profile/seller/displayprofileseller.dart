@@ -28,11 +28,13 @@ class Displayprofile extends StatelessWidget {
       ),
 
       Displayprof(
-        title: 'User Management',
+        title: 'Management Product',
         icon: Icons.chrome_reader_mode_outlined,
         onPress: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => SellerManagement()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const SellerManagement()));
         },
       ),
       Displayprof(
