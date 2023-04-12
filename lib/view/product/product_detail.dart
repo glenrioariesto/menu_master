@@ -26,31 +26,59 @@ class _ProductDetailViewState extends State<ProductDetailView> {
           Container(
             width: double.infinity,
             height: 250,
-            child: Image.network(
-              "${product.imageUrl}",
-              fit: BoxFit.cover,
+            decoration: BoxDecoration(
+                border: Border.all(width: 8.0, color: ColorPalette.otherColor),
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(18),
+                    bottomRight: Radius.circular(18))),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20)),
+              child: Image.network(
+                product.imageUrl,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          const SizedBox(height: 30),
-          Text(
-            "${product.title}",
-            style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  product.title,
+                  style: const TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  "\$${product.price}",
+                  style: const TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 15),
-          Text(
-            "\$${product.price}",
-            style: TextStyle(
-              fontSize: 24,
+          Container(
+            margin: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(15),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+              color: ColorPalette.backgroundColor,
             ),
-          ),
-          SizedBox(height: 15),
-          Text(
-            "${product.description}",
-            style: TextStyle(
-              fontSize: 24,
+            height: 200,
+            width: 450,
+            child: Text(
+              product.description,
+              style: const TextStyle(
+                fontSize: 24,
+              ),
+              maxLines: 5,
             ),
           ),
         ],

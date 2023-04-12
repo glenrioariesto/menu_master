@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:menu_master/view/homeseller.dart';
 
 import 'package:provider/provider.dart';
@@ -50,7 +51,7 @@ class _SellerManagementState extends State<SellerManagement> {
       appBar: AppBar(
           backgroundColor: ColorPalette.primaryColor,
           title: const Text(
-            "Management Produk",
+            "Management Product",
             style: TextStyle(fontWeight: FontWeight.bold),
           )),
       body: SingleChildScrollView(
@@ -73,6 +74,8 @@ class _SellerManagementState extends State<SellerManagement> {
                           labelText: 'Enter a new product title',
                           errorStyle:
                               TextStyle(color: ColorPalette.primaryColor)),
+                      maxLength: 15,
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter your new product title';
@@ -82,6 +85,8 @@ class _SellerManagementState extends State<SellerManagement> {
                       onSaved: (value) {},
                     ),
                     TextFormField(
+                      maxLength: 200,
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
                       controller: _description,
                       decoration: const InputDecoration(
                           icon: Icon(
@@ -104,6 +109,8 @@ class _SellerManagementState extends State<SellerManagement> {
                           labelText: 'Enter the number of available products',
                           errorStyle:
                               TextStyle(color: ColorPalette.primaryColor)),
+                      maxLength: 500,
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter the number of available products';
@@ -122,6 +129,8 @@ class _SellerManagementState extends State<SellerManagement> {
                         labelText: 'Enter the price of your new product',
                         errorStyle: TextStyle(color: ColorPalette.primaryColor),
                       ),
+                      maxLength: 3,
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please Enter your new product price';
