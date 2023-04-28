@@ -101,6 +101,11 @@ class _SellerManagementState extends State<SellerManagement> {
                     ),
                     TextFormField(
                       controller: _qty,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'\d')),
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
                       decoration: const InputDecoration(
                           icon: Icon(
                             Icons.add_shopping_cart_sharp,
@@ -121,6 +126,11 @@ class _SellerManagementState extends State<SellerManagement> {
                     ),
                     TextFormField(
                       controller: _price,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'\d')),
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.attach_money,
