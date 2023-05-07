@@ -56,6 +56,7 @@ class _LoginFormState extends State<LoginForm> {
                     color: Colors.white,
                   ),
                   labelText: 'Email',
+                  labelStyle: TextStyle(color: Colors.white),
                   errorStyle: TextStyle(color: ColorPalette.textColorMM)),
               validator: (value) {
                 if (value!.isEmpty) {

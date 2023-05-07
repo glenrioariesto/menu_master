@@ -3,7 +3,10 @@ import 'package:menu_master/shared/constants.dart';
 import 'package:menu_master/view/profile/profilecustomer.dart';
 
 import 'package:provider/provider.dart';
+import '../model/akunmodel.dart';
+import '../provider/akunprovider.dart';
 import '../provider/auth.dart';
+import '../provider/cart.dart';
 import '../widgets/widgets_product_grid.dart';
 
 class HomeCustomer extends StatefulWidget {
@@ -20,6 +23,13 @@ class _HomeCustomerState extends State<HomeCustomer> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: false);
+    final akunProv = Provider.of<AkunProvider>(context, listen: false);
+
+    akunProv.getDataById(auth.userId.toString());
+    AkunModel akun = akunProv.selectById(auth.userId.toString());
+
+    Provider.of<Cart>(context, listen: false).getAllCart(akun.id);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
