@@ -43,7 +43,7 @@ class Products with ChangeNotifier {
               id: id["name"],
               title: title,
               description: description,
-              qty: qty,
+              qtyseller: qty,
               price: price,
               address: address,
               imageUrl: imageUrl));
@@ -69,7 +69,7 @@ class Products with ChangeNotifier {
             id: key,
             title: value["title"],
             description: value["description"],
-            qty: value["qty"],
+            qtyseller: value["qty"],
             price: value["price"],
             address: value["address"],
             imageUrl: value["imageUrl"]));

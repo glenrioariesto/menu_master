@@ -2,9 +2,11 @@ class Product {
   String id;
   String idcustomer;
   String idseller;
+  String idcart;
   String title;
   String description;
-  String qty;
+  int qtyseller;
+  int qtycart;
   String price;
   String address;
   // List<String> variant;
@@ -14,9 +16,11 @@ class Product {
     required this.id,
     this.idcustomer = '',
     this.idseller = '',
+    this.idcart = '',
     required this.title,
     required this.description,
-    required this.qty,
+    this.qtyseller = 0,
+    this.qtycart = 0,
     required this.price,
     required this.address,
     // required this.variant,

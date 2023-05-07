@@ -4,8 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../provider/akunprovider.dart';
-
 class Auth with ChangeNotifier {
   Timer? _authTimer;
   String? _idToken, userId, email;
@@ -146,7 +144,6 @@ class Auth with ChangeNotifier {
         var responseData = json.decode(response.body);
         if (responseData['error'] != null) {
           print(responseData);
-
           throw responseData['error']['message'];
         }
 

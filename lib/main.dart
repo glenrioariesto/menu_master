@@ -1,18 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:menu_master/provider/akunprovider.dart';
-import 'package:menu_master/view/homeseller.dart';
-import 'package:menu_master/view/product/product_detail.dart';
 
 import 'package:provider/provider.dart';
+import '../provider/akunprovider.dart';
 import '../provider/auth.dart';
+import '../provider/cart.dart';
 import 'provider/products.dart';
 
+import '../view/product/product_detail.dart';
 import '../view/profile/profilecustomer.dart';
 import '../view/profile/profileseller.dart';
 import '../view/login.dart';
 import '../view/register.dart';
 import '../view/homecustomer.dart';
+import '../view/homeseller.dart';
+import '../view/cartview.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -31,6 +33,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => Products(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Cart(),
         ),
         ChangeNotifierProvider(
           create: (ctx) => AkunProvider(),
@@ -75,6 +80,7 @@ class MyApp extends StatelessWidget {
                 const HomeSeller(title: 'Menu Master'),
             Profileseller.nameRoute: (context) => const Profileseller(),
             ProductDetailView.nameRoute: (context) => const ProductDetailView(),
+            CartView.nameRoute: (context) => const CartView(),
           },
         ),
       ),
