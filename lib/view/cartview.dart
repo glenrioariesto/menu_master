@@ -18,7 +18,7 @@ class CartView extends StatelessWidget {
         body: Column(
           children: [
             Card(
-              margin: EdgeInsets.all(20),
+              margin: EdgeInsets.all(10),
               child: Container(
                 padding: EdgeInsets.all(15),
                 child: Text('Total : ${cart.total}'),
@@ -28,11 +28,14 @@ class CartView extends StatelessWidget {
                 child: ListView.builder(
               itemCount: cart.items.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(cart.items[index].title),
-                  subtitle: Text("Quantity : ${cart.items[index].qtycart}"),
-                  trailing: Text(
-                      "${cart.items[index].qtycart * int.parse(cart.items[index].price)} "),
+                return GestureDetector(
+                  onTap: () {},
+                  child: ListTile(
+                    title: Text(cart.items[index].title),
+                    subtitle: Text("Quantity : ${cart.items[index].qtycart}"),
+                    trailing: Text(
+                        "${cart.items[index].qtycart * int.parse(cart.items[index].price)} "),
+                  ),
                 );
               },
             ))
