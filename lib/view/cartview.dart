@@ -61,7 +61,9 @@ class CartView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Container(
-                                  width: 100,
+                                  width: MediaQuery.of(context).size.width > 600
+                                      ? 50
+                                      : 100,
                                   height: 100,
                                   child: Image.network(
                                     cart.items[index].imageUrl,
@@ -69,7 +71,9 @@ class CartView extends StatelessWidget {
                                   )),
                               Container(
                                 height: 80,
-                                width: 200,
+                                width: MediaQuery.of(context).size.width > 600
+                                    ? 100
+                                    : 200,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -96,7 +100,10 @@ class CartView extends StatelessWidget {
                                   Container(
                                     alignment: Alignment.topRight,
                                     height: 60,
-                                    width: 150,
+                                    width:
+                                        MediaQuery.of(context).size.width > 600
+                                            ? 50
+                                            : 150,
                                     child: Text(
                                       "Rp. ${cart.items[index].qtycart * int.parse(cart.items[index].price)} ",
                                       style: TextStyle(
