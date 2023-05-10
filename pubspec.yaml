@@ -42,6 +42,7 @@ dependencies:
   flutter_svg: ^1.0.3
   http: ^0.13.5
   provider: ^6.0.5
+  banner_carousel: ^1.2.1
   
 
 
