@@ -52,6 +52,7 @@ class _RegisterFormState extends State<RegisterForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
+            style: TextStyle(color: Colors.white),
             controller: _username,
             decoration: const InputDecoration(
                 icon: Icon(
@@ -59,6 +60,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   color: Colors.white,
                 ),
                 labelText: 'Username',
+                labelStyle: TextStyle(color: Colors.white),
                 errorStyle: TextStyle(color: ColorPalette.textColorMM)),
             validator: (value) {
               if (value!.isEmpty) {
@@ -69,6 +71,7 @@ class _RegisterFormState extends State<RegisterForm> {
             onSaved: (value) {},
           ),
           TextFormField(
+            style: TextStyle(color: Colors.white),
             controller: _email,
             decoration: const InputDecoration(
                 icon: Icon(
@@ -76,6 +79,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   color: Colors.white,
                 ),
                 labelText: 'Email',
+                labelStyle: TextStyle(color: Colors.white),
                 errorStyle: TextStyle(color: ColorPalette.textColorMM)),
             autofocus: false,
             validator: (value) {
@@ -87,6 +91,7 @@ class _RegisterFormState extends State<RegisterForm> {
             onSaved: (value) {},
           ),
           TextFormField(
+            style: TextStyle(color: Colors.white),
             controller: _password,
             obscureText: true,
             decoration: const InputDecoration(
@@ -95,6 +100,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   color: Colors.white,
                 ),
                 labelText: 'Password',
+                labelStyle: TextStyle(color: Colors.white),
                 errorStyle: TextStyle(color: ColorPalette.textColorMM)),
             validator: (value) {
               if (value!.isEmpty) {
@@ -105,6 +111,7 @@ class _RegisterFormState extends State<RegisterForm> {
             onSaved: (value) {},
           ),
           TextFormField(
+            style: TextStyle(color: Colors.white),
             controller: _confirmpassword,
             obscureText: true,
             decoration: const InputDecoration(
@@ -113,6 +120,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 color: Colors.white,
               ),
               labelText: 'Confirm Password',
+              labelStyle: TextStyle(color: Colors.white),
               errorStyle: TextStyle(color: ColorPalette.textColorMM),
             ),
             validator: (value) {
@@ -132,8 +140,12 @@ class _RegisterFormState extends State<RegisterForm> {
                 width: 15,
               ),
               DropdownButton(
+                style: TextStyle(color: ColorPalette.primaryColor),
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
-                hint: Text(_selectItems.toString()),
+                hint: Text(
+                  _selectItems.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
                 items: const [
                   DropdownMenuItem(
                     value: "Customer",
