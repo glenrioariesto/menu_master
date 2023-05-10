@@ -49,6 +49,7 @@ class _LoginFormState extends State<LoginForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
+              style: TextStyle(color: Colors.white),
               controller: _email,
               decoration: const InputDecoration(
                   icon: Icon(
@@ -67,6 +68,7 @@ class _LoginFormState extends State<LoginForm> {
               onSaved: (value) {},
             ),
             TextFormField(
+              style: TextStyle(color: Colors.white),
               controller: _password,
               obscureText: true,
               decoration: const InputDecoration(
@@ -75,6 +77,7 @@ class _LoginFormState extends State<LoginForm> {
                     color: Colors.white,
                   ),
                   labelText: 'Password',
+                  labelStyle: TextStyle(color: Colors.white),
                   errorStyle: TextStyle(color: ColorPalette.textColorMM)),
               validator: (value) {
                 if (value!.isEmpty) {
