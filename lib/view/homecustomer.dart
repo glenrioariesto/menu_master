@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
 import 'package:menu_master/view/profile/profilecustomer.dart';
-
+import 'package:banner_carousel/banner_carousel.dart';
 import 'package:provider/provider.dart';
 import '../model/akunmodel.dart';
 import '../provider/akunprovider.dart';
@@ -17,6 +17,21 @@ class HomeCustomer extends StatefulWidget {
 
   @override
   State<HomeCustomer> createState() => _HomeCustomerState();
+}
+
+class BannerImages {
+  static const String banner1 =
+      "https://assets.grab.com/wp-content/uploads/sites/9/2020/08/06150116/1200x630Blog_diskon-88.jpg";
+  static const String banner2 =
+      "https://assets.grab.com/wp-content/uploads/sites/9/2020/07/03145618/DK7.7_BLOGPOST_1200X630.jpg";
+  static const String banner3 =
+      "https://1.bp.blogspot.com/-LHB9nYzE4Qw/YTytZhyYG0I/AAAAAAAE6_w/XiLWGeD2tIEZJNp99njLAb4SadKuWKfEgCNcBGAsYHQ/s1080/CHICKEN%2BPAO%2BPromo%2BMAGER%2BMakan%2BGratis%2BDiskon%2B60%2525%2Bvia%2BShopeeFood.jpg";
+
+  static List<BannerModel> listBanners = [
+    BannerModel(imagePath: banner1, id: "1"),
+    BannerModel(imagePath: banner2, id: "2"),
+    BannerModel(imagePath: banner3, id: "3"),
+  ];
 }
 
 class _HomeCustomerState extends State<HomeCustomer> {
@@ -74,11 +89,10 @@ class _HomeCustomerState extends State<HomeCustomer> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              color: ColorPalette.backgroundColor,
-              height: 200,
-              width: double.infinity,
-              child: Text("carousel image", textAlign: TextAlign.center),
+            BannerCarousel(
+              banners: BannerImages.listBanners,
+              onTap: (id) => print(id),
+              animation: true,
             ),
             Container(
               height: MediaQuery.of(context).size.height,
