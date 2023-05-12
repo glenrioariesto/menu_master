@@ -72,6 +72,7 @@ class _SellerManagementState extends State<SellerManagement> {
                   children: [
                     TextFormField(
                       controller: _title,
+                      textCapitalization: TextCapitalization.words,
                       decoration: const InputDecoration(
                           icon: Icon(
                             Icons.shopping_bag,
