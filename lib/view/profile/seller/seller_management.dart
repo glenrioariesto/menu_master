@@ -80,7 +80,7 @@ class _SellerManagementState extends State<SellerManagement> {
                           labelText: 'Enter a new product title',
                           errorStyle:
                               TextStyle(color: ColorPalette.primaryColor)),
-                      maxLength: 15,
+                      maxLength: 35,
                       maxLengthEnforcement: MaxLengthEnforcement.enforced,
                       validator: (value) {
                         if (value!.isEmpty) {
