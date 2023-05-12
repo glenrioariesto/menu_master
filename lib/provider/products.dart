@@ -16,7 +16,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(
-      title, description, qty, price, address, imageUrl, sellerId) async {
+      title, description, int qty, price, address, imageUrl, sellerId) async {
     var url = Uri.parse("$baseurl/product.json");
     try {
       await http

@@ -37,7 +37,13 @@ class _SellerManagementState extends State<SellerManagement> {
         akunProv.getDataById(auth.userId.toString());
         AkunModel akun = akunProv.selectById(auth.userId.toString());
         await Provider.of<Products>(context, listen: false).addProduct(
-            title, description, qty, price, akun.address, imageUrl, akun.id);
+            title,
+            description,
+            int.parse(qty),
+            price,
+            akun.address,
+            imageUrl,
+            akun.id);
       } catch (e) {
         return "An Errorerror occurred: ${e.toString()}";
       }
@@ -139,7 +145,7 @@ class _SellerManagementState extends State<SellerManagement> {
                         labelText: 'Enter the price of your new product',
                         errorStyle: TextStyle(color: ColorPalette.primaryColor),
                       ),
-                      maxLength: 3,
+                      maxLength: 6,
                       maxLengthEnforcement: MaxLengthEnforcement.enforced,
                       validator: (value) {
                         if (value!.isEmpty) {
