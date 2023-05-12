@@ -82,7 +82,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    "\$${product.price}",
+                    "Rp. ${product.price}",
                     style: const TextStyle(
                       fontSize: 24,
                     ),
