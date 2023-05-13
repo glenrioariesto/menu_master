@@ -17,13 +17,6 @@ class CartView extends StatelessWidget {
             centerTitle: true),
         body: Column(
           children: [
-            Card(
-              margin: EdgeInsets.all(10),
-              child: Container(
-                padding: EdgeInsets.all(15),
-                child: Text('Total : ${cart.total}'),
-              ),
-            ),
             Expanded(
                 child: ListView.builder(
               itemCount: cart.items.length,
@@ -73,7 +66,7 @@ class CartView extends StatelessWidget {
                                 height: 80,
                                 width: MediaQuery.of(context).size.width > 600
                                     ? 100
-                                    : 200,
+                                    : 100,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -126,12 +119,12 @@ class CartView extends StatelessWidget {
                                                     ColorPalette.otherColor)),
                                       ),
                                       SizedBox(
-                                        width: 10,
+                                        width: 5,
                                       ),
                                       ElevatedButton(
                                         onPressed: () {},
                                         child: Text(
-                                          "Pay now",
+                                          "Buy",
                                           style: TextStyle(color: Colors.black),
                                         ),
                                         style: const ButtonStyle(
@@ -156,7 +149,14 @@ class CartView extends StatelessWidget {
                   ],
                 );
               },
-            ))
+            )),
+            Card(
+              margin: EdgeInsets.all(10),
+              child: Container(
+                padding: EdgeInsets.all(15),
+                child: Text('Total : ${cart.total}'),
+              ),
+            ),
           ],
         ));
   }
