@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:menu_master/provider/payment.dart';
+import 'package:menu_master/view/payment/paymentview.dart';
 
 import 'package:provider/provider.dart';
 import '../provider/akunprovider.dart';
@@ -39,6 +41,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => AkunProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Payment(),
         ),
       ],
       builder: (context, child) => Consumer<Auth>(
@@ -81,6 +86,7 @@ class MyApp extends StatelessWidget {
             Profileseller.nameRoute: (context) => const Profileseller(),
             ProductDetailView.nameRoute: (context) => const ProductDetailView(),
             CartView.nameRoute: (context) => const CartView(),
+            PaymentView.nameRoute: (context) => const PaymentView()
           },
         ),
       ),

@@ -155,4 +155,22 @@ class Cart with ChangeNotifier {
       }
     }
   }
+
+  Future<void> deletecart(String idUser, String idCart) async {
+    var url = Uri.parse("$baseurl/cart/$idUser/$idCart.json");
+
+    try {
+      await http.delete(url).then((response) {
+        if (response.statusCode == 200) {
+          _items.removeWhere((item) => item.idcart == idCart);
+          notifyListeners();
+          print('success delete data');
+        } else {
+          throw Exception('Failed to delete data');
+        }
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
