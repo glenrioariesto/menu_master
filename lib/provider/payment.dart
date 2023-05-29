@@ -27,50 +27,33 @@ class Payment with ChangeNotifier {
       'Authorization':
           'Basic ${base64Encode(utf8.encode('SB-Mid-server-tUvjOpGgOAPZpMeqpAuJM8ns:'))}'
     };
-    print("masuk");
+    // print("masuk");
     try {
       final response = await http.post(
         urlmidtrans,
         headers: headers,
-        body: json.encode(
-            // {
-            //   "payment_type": "gopay",
-            //   "transaction_details": {"gross_amount": 20000, "order_id": orderid},
-            //   "gopay": {
-            //     "enable_callback": true,
-            //     "callback_url": "https://gopay.co.id/icon.png"
-            //   },
-            //   "item_details": [
-            //     {
-            //       "id": productid,
-            //       "price": "20000",
-            //       "quantity": qty,
-            //       "name": title
-            //     },
-            //   ],
-            // },
+        body: json.encode({
+          "payment_type": "gopay",
+          "transaction_details": {
+            "gross_amount": pricemidtrans * qty,
+            "order_id": orderid
+          },
+          "gopay": {
+            "enable_callback": true,
+            "callback_url": "https://gopay.co.id/icon.png"
+          },
+          "item_details": [
             {
-              "payment_type": "gopay",
-              "transaction_details": {
-                "gross_amount": pricemidtrans,
-                "order_id": orderid
-              },
-              "gopay": {
-                "enable_callback": true,
-                "callback_url": "https://gopay.co.id/icon.png"
-              },
-              "item_details": [
-                {
-                  "id": productid,
-                  "price": pricemidtrans,
-                  "quantity": 1,
-                  "name": title
-                },
-              ]
-            }),
+              "id": productid,
+              "price": pricemidtrans * qty,
+              "quantity": 1,
+              "name": title
+            },
+          ]
+        }),
       );
       final responseBody = jsonDecode(response.body);
-      // print(responseBody);
+      print(responseBody);
 
       return responseBody;
     } catch (e) {
@@ -86,13 +69,14 @@ class Payment with ChangeNotifier {
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': 'Basic SB-Mid-server-tUvjOpGgOAPZpMeqpAuJM8ns:'
+      'Authorization':
+          'Basic ${base64Encode(utf8.encode('SB-Mid-server-tUvjOpGgOAPZpMeqpAuJM8ns:'))}'
     };
     final response = await http.get(url, headers: headers);
     try {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-        print(data);
+        // print(data);
         return data;
       } else {
         throw "ssd";
