@@ -43,7 +43,7 @@ class _SettingCustomerState extends State<SettingCustomer> {
       appBar: AppBar(
           backgroundColor: ColorPalette.primaryColor,
           title: const Text(
-            "Management Product",
+            "Setting",
             style: TextStyle(fontWeight: FontWeight.bold),
           )),
       body: Container(

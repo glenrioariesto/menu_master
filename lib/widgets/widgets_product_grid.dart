@@ -18,6 +18,7 @@ class ProductGrid extends StatefulWidget {
 
 class _ProductGridState extends State<ProductGrid> {
   bool _isLoading = true;
+  String status = '';
 
   @override
   void initState() {
@@ -36,8 +37,10 @@ class _ProductGridState extends State<ProductGrid> {
 
     if (akun.status == "Customer") {
       await productProv.getAllProduct();
+      status = "Customer";
     } else if (akun.status == "Seller") {
       await productProv.getAllProductById(auth.userId!);
+      status = "Seller";
     }
 
     setState(() {
@@ -86,22 +89,26 @@ class _ProductGridState extends State<ProductGrid> {
                     allproduct[i].title,
                     textAlign: TextAlign.center,
                   ),
-                  trailing: IconButton(
-                    icon: const Icon(
-                      Icons.shopping_cart,
-                    ),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text('Successfully Added Product to Cart'),
-                        duration: Duration(milliseconds: 500),
-                      ));
+                  trailing: status == "Customer"
+                      ? IconButton(
+                          icon: const Icon(
+                            Icons.shopping_cart,
+                          ),
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text('Successfully Added Product to Cart'),
+                              duration: Duration(milliseconds: 500),
+                            ));
 
-                      final product = productProv.selectById(allproduct[i].id);
+                            final product =
+                                productProv.selectById(allproduct[i].id);
 
-                      cart.addCart(akun.id, product);
-                    },
-                    color: ColorPalette.secondaryColor,
-                  ),
+                            cart.addCart(akun.id, product);
+                          },
+                          color: ColorPalette.secondaryColor,
+                        )
+                      : Container(),
                 ),
                 child: GestureDetector(
                   onTap: () {
