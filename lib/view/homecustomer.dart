@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:menu_master/shared/constants.dart';
-import 'package:menu_master/view/profile/profilecustomer.dart';
 import 'package:banner_carousel/banner_carousel.dart';
 import 'package:provider/provider.dart';
+import '../shared/constants.dart';
 import '../model/akunmodel.dart';
 import '../provider/akunprovider.dart';
 import '../provider/auth.dart';
 import '../provider/cart.dart';
 import '../widgets/widgets_product_grid.dart';
+import '../view/profile/profilecustomer.dart';
+import '../view/login.dart';
 
 class HomeCustomer extends StatefulWidget {
   const HomeCustomer({super.key, required this.title});
@@ -42,6 +43,9 @@ class _HomeCustomerState extends State<HomeCustomer> {
 
     akunProv.getDataById(auth.userId.toString());
     AkunModel akun = akunProv.selectById(auth.userId.toString());
+    if (auth.userId.toString() == '') {
+      Navigator.pushReplacementNamed(context, Login.nameRoute);
+    }
 
     Provider.of<Cart>(context, listen: false).getAllCart(akun.id);
 
@@ -89,6 +93,9 @@ class _HomeCustomerState extends State<HomeCustomer> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: 15,
+            ),
             BannerCarousel(
               banners: BannerImages.listBanners,
               onTap: (id) => print(id),

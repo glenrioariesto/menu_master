@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:menu_master/provider/cart.dart';
+import 'package:provider/provider.dart';
 import 'package:menu_master/shared/constants.dart';
 
-import 'package:provider/provider.dart';
-import 'package:menu_master/provider/auth.dart';
+import '../../../provider/auth.dart';
+import '../../../provider/cart.dart';
 
-import '../../cartview.dart';
-import '../../login.dart';
+import '../../../view/profile/customer/settingcustomer.dart';
+import '../../../view/cartview.dart';
+import '../../../view/login.dart';
 
 class Displayprofile extends StatelessWidget {
   const Displayprofile({super.key});
@@ -19,7 +20,10 @@ class Displayprofile extends StatelessWidget {
       Displayprof(
         title: 'Settings',
         icon: Icons.settings,
-        onPress: () {},
+        onPress: () {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const SettingCustomer()));
+        },
       ),
       Displayprof(
         title: 'E-Wallet',

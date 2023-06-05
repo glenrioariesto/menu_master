@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:menu_master/provider/auth.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/payment/paymentmodel.dart';
@@ -9,6 +11,7 @@ import '../../shared/constants.dart';
 import '../../model/product.dart';
 import '../../view/homecustomer.dart';
 import '../../view/payment/statuspayment.dart';
+import '../../view/payment/methodgopay.dart';
 
 class PaymentView extends StatefulWidget {
   const PaymentView({
@@ -37,6 +40,9 @@ class _PaymentViewState extends State<PaymentView> {
       expiryTime: DateTime.now());
   late String paymentmethod = 'listpayment';
   late int _remainingTime;
+  late Product arguments = Product(
+      id: '', title: '', description: '', price: '', address: '', imageUrl: '');
+  bool _isDisposed = false;
 
   late Timer? _timer;
   String orderid = "Order" + DateTime.now().millisecondsSinceEpoch.toString();
@@ -45,8 +51,10 @@ class _PaymentViewState extends State<PaymentView> {
     return Future.delayed(const Duration(microseconds: 2250)).then(
       (_) async {
         try {
-          Payment wallet = await Provider.of<Payment>(context, listen: false);
-          return wallet.getTransactionStatus(Orderid);
+          Payment wallet = Provider.of<Payment>(context, listen: false);
+
+          var status = await wallet.getTransactionStatus(Orderid);
+          return status;
         } catch (e) {
           print("An Error occurred: ${e}");
           return {};
@@ -82,6 +90,7 @@ class _PaymentViewState extends State<PaymentView> {
                   MaterialPageRoute(
                     builder: (context) => StatusPayment(
                       transaction: transaction,
+                      product: arguments,
                       run_url: false,
                     ),
                   ),
@@ -99,6 +108,7 @@ class _PaymentViewState extends State<PaymentView> {
                   MaterialPageRoute(
                     builder: (context) => StatusPayment(
                       transaction: transaction,
+                      product: arguments,
                       run_url: false,
                     ),
                   ),
@@ -118,6 +128,8 @@ class _PaymentViewState extends State<PaymentView> {
 
   @override
   void dispose() {
+    _isDisposed = true;
+
     if (_timer != null && _timer!.isActive) {
       _timer?.cancel();
     }
@@ -126,11 +138,13 @@ class _PaymentViewState extends State<PaymentView> {
   }
 
   void updateTimer() {
-    setState(() {
-      _remainingTime--;
-    });
-    if (_remainingTime == 0) {
-      _timer?.cancel();
+    if (!_isDisposed) {
+      setState(() {
+        _remainingTime--;
+      });
+      if (_remainingTime == 0) {
+        _timer?.cancel();
+      }
     }
   }
 
@@ -146,32 +160,41 @@ class _PaymentViewState extends State<PaymentView> {
 
   @override
   Widget build(BuildContext context) {
-    final Product arguments =
-        ModalRoute.of(context)?.settings.arguments as Product;
+    arguments = ModalRoute.of(context)?.settings.arguments as Product;
     var total = int.parse(arguments.price) * arguments.qtycart;
-    final wallet = Provider.of<Payment>(context);
+    final wallet = Provider.of<Payment>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
 
     final List<Map<String, dynamic>> paymentList = [
       {
         'namaPayment': 'Virtual Account',
         'imageUrl': [
-          'https://cdn.freebiesupply.com/logos/thumbs/2x/bca-bank-central-asia-logo.png',
-          'https://cdn.freebiesupply.com/logos/thumbs/2x/bank-mandiri-logo.png'
+          {
+            "name": "BCA",
+            "url":
+                'https://cdn.freebiesupply.com/logos/thumbs/2x/bca-bank-central-asia-logo.png',
+          },
+          {
+            "name": "MANDIRI",
+            "url":
+                'https://cdn.freebiesupply.com/logos/thumbs/2x/bank-mandiri-logo.png'
+          }
         ],
       },
       {
         'namaPayment': 'GoPay',
         'imageUrl': [
-          'https://gopay.co.id/icon.png',
-          'https://static.vecteezy.com/system/resources/previews/013/433/620/original/qris-application-icon-design-on-white-background-free-vector.jpg'
+          {
+            "name": "Gopay",
+            "url": 'https://gopay.co.id/icon.png',
+          },
+          {
+            "name": "QRIS",
+            "url":
+                'https://static.vecteezy.com/system/resources/previews/013/433/620/original/qris-application-icon-design-on-white-background-free-vector.jpg'
+          }
         ],
       },
-      // {
-      //   'namaPayment': 'QRIS',
-      //   'imageUrl': [
-      //     'https://static.vecteezy.com/system/resources/previews/013/433/620/original/qris-application-icon-design-on-white-background-free-vector.jpg'
-      //   ],
-      // },
     ];
     return Scaffold(
       body: Stack(
@@ -196,217 +219,513 @@ class _PaymentViewState extends State<PaymentView> {
               ),
               Expanded(
                 child: paymentmethod == 'GoPay'
-                    ? Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.all(8),
-                        padding: EdgeInsets.fromLTRB(12, 60, 12, 20),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Gopay",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                    ? methodgopay(
+                        transaction: transaction,
+                        arguments: arguments,
+                        timer: _timer)
+                    : paymentmethod == 'Virtual Account'
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.all(8),
+                            padding: EdgeInsets.fromLTRB(12, 50, 12, 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.arrow_back, size: 40),
+                                  onPressed: () {
+                                    paymentmethod = '';
+                                  },
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  paymentList[0]["namaPayment"],
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  Image.network(
-                                    'https://gopay.co.id/icon.png',
-                                    height: 50,
-                                    width: 50,
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: 15),
-                              Center(
-                                child: Image.network(
-                                  transaction.actions![0]['url'],
-                                  height: 300,
-                                  width: 300,
                                 ),
-                              ),
-                              Center(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => StatusPayment(
-                                              transaction: transaction,
-                                              run_url: true),
-                                        ));
-                                    _timer?.cancel();
-                                  },
-                                  child: Text('Pay via App',
-                                      style: TextStyle(color: Colors.black)),
-                                  style: ElevatedButton.styleFrom(
-                                      textStyle: TextStyle(
-                                          fontSize: 18), // ubah ukuran teks
-                                      minimumSize: Size(300,
-                                          70), // ubah ukuran minimum tombol
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 10),
-                                      backgroundColor: Colors.blue[600]),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Center(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => StatusPayment(
-                                              transaction: transaction,
-                                              run_url: false),
-                                        ));
-                                    _timer?.cancel();
-                                  },
-                                  child: Text('Back to merchant',
-                                      style: TextStyle(color: Colors.black)),
-                                  style: ElevatedButton.styleFrom(
-                                      textStyle: TextStyle(
-                                          fontSize: 18), // ubah ukuran teks
-                                      minimumSize: Size(300,
-                                          70), // ubah ukuran minimum tombol
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 10),
-                                      backgroundColor:
-                                          ColorPalette.secondaryColor),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    : Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.all(8),
-                        padding: EdgeInsets.fromLTRB(12, 60, 12, 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Select payment method",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                            Expanded(
-                                child: ListView.builder(
-                              itemCount: paymentList.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      paymentList[index]["namaPayment"],
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    ListTile(
-                                      onTap: () async {
-                                        if (paymentList[index]["namaPayment"] ==
-                                            'GoPay') {
-                                          await wallet
-                                              .createTransactiongGopay(
-                                                  arguments.title,
-                                                  arguments.qtycart,
-                                                  orderid,
-                                                  arguments.price,
-                                                  arguments.idcustomer,
-                                                  arguments.id)
-                                              .then((value) async {
-                                            if (mounted) {
-                                              setState(() {
-                                                transaction =
-                                                    Transaction.fromJson(value);
-                                              });
-                                            } else {
-                                              _timer?.cancel();
-                                            }
+                                Expanded(
+                                    child: ListView.builder(
+                                  itemCount: paymentList.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        ListTile(
+                                          onTap: () async {
+                                            if (paymentList[0]['imageUrl']
+                                                    [index]['name'] ==
+                                                "BCA") {
+                                              await wallet
+                                                  .createTransactiongVABCA(
+                                                      arguments.title,
+                                                      arguments.qtycart,
+                                                      orderid,
+                                                      arguments.price,
+                                                      auth.userId.toString(),
+                                                      arguments.id)
+                                                  .then((value) async {
+                                                print(value['va_numbers'][0]
+                                                    ['va_number']);
+                                                if (mounted) {
+                                                  setState(() {
+                                                    transaction =
+                                                        Transaction.fromJsonVA(
+                                                            value);
+                                                  });
+                                                } else {
+                                                  _timer?.cancel();
+                                                }
+                                                paymentmethod = "BCA";
 
-                                            paymentmethod = paymentList[index]
-                                                ["namaPayment"];
-                                            print("ini Link qris " +
-                                                transaction.actions![0]['url']);
-                                            _remainingTime = 900;
-                                          });
-                                        } else if (paymentList[index]
-                                                ["namaPayment"] ==
-                                            'QRIS') {
-                                          if (mounted) {
-                                            setState(() {
-                                              paymentmethod = paymentList[index]
-                                                  ["namaPayment"];
-                                            });
-                                          } else {
-                                            _timer?.cancel();
-                                          }
-                                          print(paymentList[index]
-                                              ['namaPayment']);
-                                        }
-                                      },
-                                      leading: Row(
-                                        mainAxisSize: MainAxisSize.min,
+                                                _remainingTime = 86400;
+                                              });
+                                            } else if (paymentList[0]
+                                                        ['imageUrl'][index]
+                                                    ['name'] ==
+                                                "MANDIRI") {
+                                              await wallet
+                                                  .createTransactiongVAMandiri(
+                                                      arguments.title,
+                                                      arguments.qtycart,
+                                                      orderid,
+                                                      arguments.price,
+                                                      auth.userId!,
+                                                      arguments.id)
+                                                  .then((value) async {
+                                                if (mounted) {
+                                                  setState(() {
+                                                    transaction =
+                                                        Transaction.fromJsonVA(
+                                                            value);
+                                                  });
+                                                } else {
+                                                  _timer?.cancel();
+                                                }
+                                                paymentmethod = "MANDIRI";
+
+                                                _remainingTime = 86400;
+                                              });
+                                            }
+                                          },
+                                          leading: Image.network(
+                                            paymentList[0]['imageUrl'][index]
+                                                ['url'],
+                                            height: 100,
+                                            width: 100,
+                                          ),
+                                          trailing:
+                                              Icon(Icons.arrow_forward_ios),
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 16),
+                                        ),
+                                        Divider(
+                                          color: Colors.grey[400],
+                                          thickness: 1,
+                                          indent: 16,
+                                          endIndent: 16,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ))
+                              ],
+                            ),
+                          )
+                        : paymentmethod == 'BCA'
+                            ? Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.all(8),
+                                padding: EdgeInsets.fromLTRB(12, 60, 12, 20),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          for (var imageUrl
-                                              in paymentList[index]["imageUrl"])
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 8.0),
-                                              child: Container(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.09,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.1,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(8)),
-                                                  border: Border.all(
-                                                      color: Colors.black26),
-                                                ),
-                                                child: Image.network(
-                                                  imageUrl,
-                                                  height: 50,
-                                                  width: 50,
-                                                ),
-                                              ),
+                                          Text(
+                                            "BCA",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
                                             ),
+                                          ),
+                                          Image.network(
+                                            paymentList[0]['imageUrl'][0]
+                                                ['url'],
+                                            height: 50,
+                                            width: 50,
+                                          )
                                         ],
                                       ),
-                                      trailing: Icon(Icons.arrow_forward_ios),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 16),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Center(
+                                        child: Text(
+                                            'Complete payment from BCA to the virtual account number below.',
+                                            style: TextStyle(fontSize: 18)),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        'Virtual Account Number',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '${transaction.vaNumbers.toString()}',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Clipboard.setData(ClipboardData(
+                                                  text: transaction.vaNumbers
+                                                      .toString()));
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'Text copied to clipboard')),
+                                              );
+                                            },
+                                            child: Icon(Icons.content_copy),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 250,
+                                      ),
+                                      Center(
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      StatusPayment(
+                                                          transaction:
+                                                              transaction,
+                                                          product: arguments,
+                                                          run_url: false),
+                                                ));
+                                            _timer?.cancel();
+                                          },
+                                          child: Text('Back to merchant',
+                                              style: TextStyle(
+                                                  color: Colors.black)),
+                                          style: ElevatedButton.styleFrom(
+                                              textStyle: TextStyle(
+                                                  fontSize:
+                                                      18), // ubah ukuran teks
+                                              minimumSize: Size(300,
+                                                  70), // ubah ukuran minimum tombol
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20, vertical: 10),
+                                              backgroundColor:
+                                                  ColorPalette.secondaryColor),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ))
+                            : paymentmethod == 'MANDIRI'
+                                ? Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.all(8),
+                                    padding:
+                                        EdgeInsets.fromLTRB(12, 60, 12, 20),
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "MANDIRI",
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Image.network(
+                                                paymentList[0]['imageUrl'][1]
+                                                    ['url'],
+                                                height: 100,
+                                                width: 100,
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Center(
+                                            child: Text(
+                                                'Complete payment from Mandiri to the virtual account number below.',
+                                                style: TextStyle(fontSize: 18)),
+                                          ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Text(
+                                            'Company code',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          Text(
+                                            '\t\t70012',
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Text(
+                                            'Virtual Account Number',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  '\t\t${transaction.vaNumbers.toString()}',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(
+                                                          text: transaction
+                                                              .vaNumbers
+                                                              .toString()));
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                        content: Text(
+                                                            'Text copied to clipboard')),
+                                                  );
+                                                },
+                                                child: Icon(Icons.content_copy),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 150,
+                                          ),
+                                          Center(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          StatusPayment(
+                                                              transaction:
+                                                                  transaction,
+                                                              product:
+                                                                  arguments,
+                                                              run_url: false),
+                                                    ));
+                                                _timer?.cancel();
+                                              },
+                                              child: Text('Back to merchant',
+                                                  style: TextStyle(
+                                                      color: Colors.black)),
+                                              style: ElevatedButton.styleFrom(
+                                                  textStyle: TextStyle(
+                                                      fontSize:
+                                                          18), // ubah ukuran teks
+                                                  minimumSize: Size(300,
+                                                      70), // ubah ukuran minimum tombol
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 10),
+                                                  backgroundColor: ColorPalette
+                                                      .secondaryColor),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ))
+                                : Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.all(8),
+                                    padding:
+                                        EdgeInsets.fromLTRB(12, 60, 12, 20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Select payment method",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                        Expanded(
+                                            child: ListView.builder(
+                                          itemCount: paymentList.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  paymentList[index]
+                                                      ["namaPayment"],
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                ListTile(
+                                                  onTap: () async {
+                                                    if (paymentList[index]
+                                                            ["namaPayment"] ==
+                                                        'GoPay') {
+                                                      await wallet
+                                                          .createTransactiongGopay(
+                                                              arguments.title,
+                                                              arguments.qtycart,
+                                                              orderid,
+                                                              arguments.price,
+                                                              arguments
+                                                                  .idcustomer,
+                                                              arguments.id)
+                                                          .then((value) async {
+                                                        if (mounted) {
+                                                          setState(() {
+                                                            transaction =
+                                                                Transaction
+                                                                    .fromJsonGOPAY(
+                                                                        value);
+                                                          });
+                                                        } else {
+                                                          _timer?.cancel();
+                                                        }
+
+                                                        paymentmethod =
+                                                            paymentList[index]
+                                                                ["namaPayment"];
+                                                        print("ini Link qris " +
+                                                            transaction
+                                                                    .actions![0]
+                                                                ['url']);
+                                                        _remainingTime = 900;
+                                                      });
+                                                    } else if (paymentList[
+                                                                index]
+                                                            ["namaPayment"] ==
+                                                        'Virtual Account') {
+                                                      if (mounted) {
+                                                        setState(() {
+                                                          paymentmethod =
+                                                              paymentList[index]
+                                                                  [
+                                                                  "namaPayment"];
+                                                        });
+                                                      } else {
+                                                        _timer?.cancel();
+                                                      }
+                                                      print(paymentList[index]
+                                                          ['namaPayment']);
+                                                    }
+                                                  },
+                                                  leading: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      for (var imageUrl
+                                                          in paymentList[index]
+                                                              ["imageUrl"])
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8.0),
+                                                          child: Container(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.09,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.1,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(Radius
+                                                                          .circular(
+                                                                              8)),
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .black26),
+                                                            ),
+                                                            child:
+                                                                Image.network(
+                                                              imageUrl['url'],
+                                                              height: 50,
+                                                              width: 50,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                  trailing: Icon(
+                                                      Icons.arrow_forward_ios),
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                          vertical: 10,
+                                                          horizontal: 16),
+                                                ),
+                                                Divider(
+                                                  color: Colors.grey[400],
+                                                  thickness: 1,
+                                                  indent: 16,
+                                                  endIndent: 16,
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ))
+                                      ],
                                     ),
-                                    Divider(
-                                      color: Colors.grey[400],
-                                      thickness: 1,
-                                      indent: 16,
-                                      endIndent: 16,
-                                    ),
-                                  ],
-                                );
-                              },
-                            ))
-                          ],
-                        ),
-                      ),
+                                  ),
               ),
             ],
           ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:menu_master/provider/cart.dart';
-import 'package:menu_master/shared/constants.dart';
-import 'package:menu_master/view/payment/paymentview.dart';
 import 'package:provider/provider.dart';
+import '../provider/cart.dart';
+import '../shared/constants.dart';
+import '../view/payment/paymentview.dart';
 
 class CartView extends StatefulWidget {
   const CartView({super.key});
@@ -37,24 +37,7 @@ class _CartViewState extends State<CartView> {
                             border: Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child:
-                              // ListTile(
-                              //   leading: Container(
-                              //       width: 100,
-                              //       height: 100,
-                              //       child: Image.network(
-                              //         cart.items[index].imageUrl,
-                              //         fit: BoxFit.cover,
-                              //       )),
-                              //   title: Text(cart.items[index].title,
-                              //       style: TextStyle(fontSize: 20)),
-                              //   subtitle:
-                              //       Text("Quantity : ${cart.items[index].qtycart}"),
-                              //   onTap: () {},
-                              //   trailing: Text(
-                              //       "${cart.items[index].qtycart * int.parse(cart.items[index].price)} "),
-                              // ),
-                              Padding(
+                          child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
