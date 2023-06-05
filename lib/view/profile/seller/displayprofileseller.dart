@@ -6,7 +6,7 @@ import 'package:menu_master/view/profile/seller/settingseller.dart';
 import 'package:provider/provider.dart';
 import '../../../provider/auth.dart';
 
-import 'managementseller/seller_management.dart';
+import '../../profile/seller/managementseller/seller_management.dart';
 import '../../../view/login.dart';
 
 class Displayprofile extends StatelessWidget {

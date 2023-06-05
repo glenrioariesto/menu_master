@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:menu_master/view/homeseller.dart';
-import 'package:menu_master/view/profile/seller/managementseller/page_addproduct.dart';
-import 'package:menu_master/view/profile/seller/managementseller/page_deleteproduct.dart';
-import 'package:menu_master/view/profile/seller/managementseller/page_updateproduct.dart';
+import '../../../../view/homeseller.dart';
+import '../../../../view/profile/seller/managementseller/page_addproduct.dart';
+import '../../../../view/profile/seller/managementseller/page_deleteproduct.dart';
+import '../../../../view/profile/seller/managementseller/page_updateproduct.dart';
 
 import 'package:provider/provider.dart';
 import '../../../../shared/constants.dart';
