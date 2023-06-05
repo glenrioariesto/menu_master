@@ -18,6 +18,7 @@ class Payment with ChangeNotifier {
 
   Future<Map<String, dynamic>> createTransactiongGopay(String title, int qty,
       String orderid, String price, String userid, String productid) async {
+    print(userid);
     var urlmidtrans = Uri.parse(baseurlmidtrans);
     var urlfirebase = Uri.parse("$baseurlfirebase/payment/$userid.json");
     int pricemidtrans = int.parse(price);
@@ -55,6 +56,19 @@ class Payment with ChangeNotifier {
       final responseBody = jsonDecode(response.body);
       print(responseBody);
 
+      if (response.statusCode == 200) {
+        var response_firbase = await http.post(urlfirebase,
+            body: json.encode({
+              "productid": productid,
+              "order_id": orderid,
+              "url_pay": responseBody['actions'][1]['url'],
+              "expiry_time": responseBody["expiry_time"],
+              "generate-qr-code": responseBody['actions'][0]['url']
+            }));
+
+        print(response_firbase.statusCode);
+      }
+
       return responseBody;
     } catch (e) {
       print("Error occurred: $e");
@@ -79,7 +93,7 @@ class Payment with ChangeNotifier {
         // print(data);
         return data;
       } else {
-        throw "ssd";
+        throw "get data failed";
       }
     } catch (e) {
       print("Error occurred: $e");
@@ -88,10 +102,12 @@ class Payment with ChangeNotifier {
   }
 
   Future<void> getHistoryPayment() async {
-    var url = Uri.parse("$baseurlmidtrans/product.json");
+    var url = Uri.parse("$baseurlfirebase/payment.json");
     var response = await http.get(url);
+    print("masuk");
     if (response.statusCode == 200) {
       var product = json.decode(response.body) as Map<String, dynamic>;
+      print(response.body);
       _wallet.clear();
       product.forEach((key, value) {
         _wallet.add(product);
@@ -99,4 +115,123 @@ class Payment with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<Map<String, dynamic>> createTransactiongVABCA(String title, int qty,
+      String orderid, String price, String userid, String productid) async {
+    var urlmidtrans = Uri.parse(baseurlmidtrans);
+    var urlfirebase = Uri.parse("$baseurlfirebase/payment/$userid.json");
+    int pricemidtrans = int.parse(price);
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization':
+          'Basic ${base64Encode(utf8.encode('SB-Mid-server-tUvjOpGgOAPZpMeqpAuJM8ns:'))}'
+    };
+    // print("masuk");
+    try {
+      final response = await http.post(
+        urlmidtrans,
+        headers: headers,
+        body: json.encode({
+          "payment_type": "bank_transfer",
+          "transaction_details": {
+            "gross_amount": pricemidtrans * qty,
+            "order_id": orderid
+          },
+          "item_details": [
+            {
+              "id": productid,
+              "price": pricemidtrans * qty,
+              "quantity": 1,
+              "name": title
+            }
+          ],
+          "bank_transfer": {"bank": "bca", "va_number": "12345678901"},
+        }),
+      );
+      final responseBody = jsonDecode(response.body);
+      print(responseBody);
+
+      if (response.statusCode == 200) {
+        var response_firbase = await http.post(urlfirebase,
+            body: json.encode({
+              "productid": productid,
+              "order_id": orderid,
+              "url_pay": "",
+              "expiry_time": responseBody["expiry_time"],
+              "generate-qr-code": ""
+            }));
+
+        print(response_firbase.statusCode);
+      }
+
+      return responseBody;
+    } catch (e) {
+      print("Error occurred: $e");
+      return {}; // or you can throw the error again to be handled by the caller
+    }
+  }
+
+  Future<Map<String, dynamic>> createTransactiongVAMandiri(
+      String title,
+      int qty,
+      String orderid,
+      String price,
+      String userid,
+      String productid) async {
+    var urlmidtrans = Uri.parse(baseurlmidtrans);
+    var urlfirebase = Uri.parse("$baseurlfirebase/payment/$userid.json");
+    int pricemidtrans = int.parse(price);
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization':
+          'Basic ${base64Encode(utf8.encode('SB-Mid-server-tUvjOpGgOAPZpMeqpAuJM8ns:'))}'
+    };
+    // print("masuk");
+    try {
+      final response = await http.post(
+        urlmidtrans,
+        headers: headers,
+        body: json.encode({
+          "payment_type": "echannel",
+          "transaction_details": {
+            "gross_amount": pricemidtrans * qty,
+            "order_id": orderid
+          },
+          "item_details": [
+            {
+              "id": productid,
+              "price": pricemidtrans * qty,
+              "quantity": 1,
+              "name": title
+            }
+          ],
+          "echannel": {"bill_info1": "Payment For:", "bill_info2": "Food"},
+        }),
+      );
+      final responseBody = jsonDecode(response.body);
+      print(responseBody);
+
+      if (response.statusCode == 200) {
+        var response_firbase = await http.post(urlfirebase,
+            body: json.encode({
+              "productid": productid,
+              "order_id": orderid,
+              "url_pay": "",
+              "expiry_time": responseBody["expiry_time"],
+              "generate-qr-code": ""
+            }));
+
+        print(response_firbase.statusCode);
+      }
+
+      return responseBody;
+    } catch (e) {
+      print("Error occurred: $e");
+      return {}; // or you can throw the error again to be handled by the caller
+    }
+  }
+
+  /*====================================BALANCE========================================== */
 }

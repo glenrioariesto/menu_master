@@ -12,24 +12,25 @@ class Transaction {
   final String? fraudStatus;
   final List<Map<String, dynamic>>? actions;
   final DateTime? expiryTime;
+  final String? vaNumbers;
 
-  Transaction({
-    this.statusCode,
-    this.statusMessage,
-    this.transactionId,
-    this.orderId,
-    this.merchantId,
-    this.grossAmount,
-    this.currency,
-    this.paymentType,
-    this.transactionTime,
-    this.transactionStatus,
-    this.fraudStatus,
-    this.actions,
-    this.expiryTime,
-  });
+  Transaction(
+      {this.statusCode,
+      this.statusMessage,
+      this.transactionId,
+      this.orderId,
+      this.merchantId,
+      this.grossAmount,
+      this.currency,
+      this.paymentType,
+      this.transactionTime,
+      this.transactionStatus,
+      this.fraudStatus,
+      this.actions,
+      this.expiryTime,
+      this.vaNumbers});
 
-  factory Transaction.fromJson(Map<String, dynamic> json) {
+  factory Transaction.fromJsonGOPAY(Map<String, dynamic> json) {
     return Transaction(
       statusCode: json['status_code'],
       statusMessage: json['status_message'],
@@ -51,6 +52,30 @@ class Transaction {
           ? DateTime.parse(json['expiry_time'])
           : null,
     );
+  }
+
+  factory Transaction.fromJsonVA(Map<String, dynamic> json) {
+    return Transaction(
+        statusCode: json['status_code'],
+        statusMessage: json['status_message'],
+        transactionId: json['transaction_id'],
+        orderId: json['order_id'],
+        merchantId: json['merchant_id'],
+        grossAmount: json['gross_amount']?.toString(),
+        currency: json['currency'],
+        paymentType: json['payment_type'],
+        transactionTime: json['transaction_time'] != null
+            ? DateTime.parse(json['transaction_time'])
+            : null,
+        transactionStatus: json['transaction_status'],
+        fraudStatus: json['fraud_status'],
+        actions: null,
+        expiryTime: json['expiry_time'] != null
+            ? DateTime.parse(json['expiry_time'])
+            : null,
+        vaNumbers: json['payment_type'] == "echannel"
+            ? json["bill_key"]
+            : json['va_numbers'][0]['va_number']);
   }
 
   Map<String, dynamic> toJson() {

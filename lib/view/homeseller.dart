@@ -81,6 +81,9 @@ class _HomeSellerState extends State<HomeSeller> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: 15,
+            ),
             BannerCarousel(
               banners: BannerImages.listBanners,
               onTap: (id) => print(id),

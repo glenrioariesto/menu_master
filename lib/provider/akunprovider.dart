@@ -13,8 +13,11 @@ class AkunProvider with ChangeNotifier {
       "https://menu-master-9c309-default-rtdb.firebaseio.com";
 
   AkunModel selectById(String id) {
-    return _allakun.firstWhere((element) => element.id == id,
-        orElse: () => null as AkunModel);
+    return _allakun.firstWhere(
+      (element) => element.id == id,
+      orElse: () => AkunModel(
+          id: '', username: '', status: '', imageUrl: '', address: ''),
+    );
   }
 
   Future<void> addDataAkun(

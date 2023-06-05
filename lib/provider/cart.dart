@@ -16,7 +16,13 @@ class Cart with ChangeNotifier {
 
   Product selectById(String id) {
     return _items.firstWhere((element) => element.id == id,
-        orElse: () => null as Product);
+        orElse: () => Product(
+            id: '',
+            title: '',
+            description: '',
+            price: '',
+            address: '',
+            imageUrl: ''));
   }
 
   int get total {
@@ -119,39 +125,40 @@ class Cart with ChangeNotifier {
 
   Future<void> getAllCart(idUser) async {
     var url = Uri.parse("$baseurl/cart/$idUser.json");
+    if (idUser != '') {
+      var response = await http.get(url);
+      // print('berhasil masuk getcart');
+      if (response.statusCode == 200) {
+        String responseBody = response.body;
+        if (responseBody != 'null') {
+          // print("berhasil cek responbody");
 
-    var response = await http.get(url);
-    // print('berhasil masuk getcart');
-    if (response.statusCode == 200) {
-      String responseBody = response.body;
-      if (responseBody != 'null') {
-        // print("berhasil cek responbody");
+          var product = json.decode(response.body) as Map<String, dynamic>;
 
-        var product = json.decode(response.body) as Map<String, dynamic>;
+          _items.clear();
 
-        _items.clear();
-
-        product.forEach((key, value) {
-          // print("get");
-          // print(key);
-          _items.add(Product(
-            idcart: key,
-            idcustomer: idUser,
-            id: value["productid"],
-            title: value["title"],
-            description: value["description"],
-            qtycart: value["qty"],
-            price: value["price"],
-            address: value["address"],
-            imageUrl: value["imageUrl"],
-          ));
-        });
-        print('success get data');
-        // print(_items);
-        notifyListeners();
-      } else {
-        print("Response body is null");
-        _items.clear();
+          product.forEach((key, value) {
+            // print("get");
+            // print(key);
+            _items.add(Product(
+              idcart: key,
+              idcustomer: idUser,
+              id: value["productid"],
+              title: value["title"],
+              description: value["description"],
+              qtycart: value["qty"],
+              price: value["price"],
+              address: value["address"],
+              imageUrl: value["imageUrl"],
+            ));
+          });
+          print('success get data cart');
+          // print(_items);
+          notifyListeners();
+        } else {
+          print("Response body is null");
+          _items.clear();
+        }
       }
     }
   }
@@ -164,7 +171,7 @@ class Cart with ChangeNotifier {
         if (response.statusCode == 200) {
           _items.removeWhere((item) => item.idcart == idCart);
           notifyListeners();
-          print('success delete data');
+          print('success delete cart');
         } else {
           throw Exception('Failed to delete data');
         }

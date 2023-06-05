@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
+import 'package:menu_master/view/profile/seller/page_ewallet.dart';
+import 'package:menu_master/view/profile/seller/settingseller.dart';
 
 import 'package:provider/provider.dart';
 import '../../../provider/auth.dart';
 
-import '../../../view/profile/seller/seller_management.dart';
+import 'managementseller/seller_management.dart';
 import '../../../view/login.dart';
 
 class Displayprofile extends StatelessWidget {
@@ -19,12 +21,19 @@ class Displayprofile extends StatelessWidget {
       Displayprof(
         title: 'Settings',
         icon: Icons.settings,
-        onPress: () {},
+        onPress: () {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const SettingSeller()));
+        },
       ),
       Displayprof(
         title: 'E-Wallet',
         icon: Icons.money,
-        onPress: () {},
+        onPress: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => EwalletView(),
+          ));
+        },
       ),
 
       Displayprof(

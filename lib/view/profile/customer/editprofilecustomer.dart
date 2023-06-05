@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:menu_master/shared/constants.dart';
-
-import 'package:menu_master/model/akunmodel.dart';
-
 import 'package:provider/provider.dart';
+
+import '../../../model/akunmodel.dart';
 import '../../../provider/akunprovider.dart';
 import '../../../provider/auth.dart';
-
-import 'package:menu_master/view/profile/customer/editprofileupdatecustomer.dart';
+import '../../../view/profile/customer/editprofileupdatecustomer.dart';
+import '../../../view/login.dart';
 
 class Editprofile extends StatelessWidget {
   const Editprofile({super.key});
@@ -17,7 +16,11 @@ class Editprofile extends StatelessWidget {
     final akunProv = Provider.of<AkunProvider>(context, listen: false);
 
     akunProv.getDataById(auth.userId.toString());
+
     AkunModel akun = akunProv.selectById(auth.userId.toString());
+    if (auth.userId.toString() == '') {
+      Navigator.pushReplacementNamed(context, Login.nameRoute);
+    }
 
     return Column(
       children: [

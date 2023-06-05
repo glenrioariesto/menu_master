@@ -1,17 +1,22 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import '../../model/product.dart';
 import '../../model/payment/paymentmodel.dart';
+import '../../provider/cart.dart';
 import '../../provider/payment.dart';
-import '../homecustomer.dart';
+import '../../provider/products.dart';
+import '../../view/homecustomer.dart';
 
 class StatusPayment extends StatefulWidget {
   const StatusPayment(
-      {super.key, required this.transaction, required this.run_url});
+      {super.key,
+      required this.transaction,
+      required this.run_url,
+      required this.product});
   final Transaction transaction;
+  final Product product;
   final bool run_url;
 
   @override
@@ -24,6 +29,7 @@ class _StatusPaymentState extends State<StatusPayment> {
   late int _remainingTime;
   late Timer _timer;
   late bool run = widget.run_url;
+  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -43,18 +49,12 @@ class _StatusPaymentState extends State<StatusPayment> {
             }
           }
         });
+      } else {
+        _timer.cancel();
       }
       // print(transaction.transactionStatus);
       if (transaction.transactionStatus != '') {
-        if (transaction.transactionStatus == 'settlement') {
-          // print('succes');
-          Future.delayed(Duration(seconds: _remainingTime), () {
-            if (mounted) {
-              Navigator.pushReplacementNamed(context, HomeCustomer.nameRoute);
-              _timer.cancel();
-            }
-          });
-        } else if (transaction.transactionStatus == 'pending' && run == true) {
+        if (transaction.transactionStatus == 'pending' && run == true) {
           Future.delayed(Duration(seconds: 0), () async {
             await _launchUrl();
             _remainingTime = 60;
@@ -87,15 +87,18 @@ class _StatusPaymentState extends State<StatusPayment> {
       setState(() {
         _remainingTime--;
       });
-    }
-    if (_remainingTime == 0) {
-      _timer.cancel();
+      if (_remainingTime == 0) {
+        _timer.cancel();
+      }
     }
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    _isDisposed = true;
+    if (_timer != null && _timer.isActive) {
+      _timer.cancel();
+    }
     super.dispose();
   }
 
@@ -180,7 +183,9 @@ class _StatusPaymentState extends State<StatusPayment> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                        "Redirect back automatically in ${_remainingTime.toString()} seconds",
+                        transaction.transactionStatus == "settlement"
+                            ? ''
+                            : "Redirect back automatically in ${_remainingTime.toString()} seconds",
                         style: TextStyle(fontSize: 25),
                         textAlign: TextAlign.center),
                     SizedBox(
@@ -195,9 +200,20 @@ class _StatusPaymentState extends State<StatusPayment> {
                       child: ElevatedButton(
                         onPressed: () {
                           // Aksi ketika button ditekan
-                          Navigator.pushReplacementNamed(
-                              context, HomeCustomer.nameRoute);
-                          _timer.cancel();
+                          if (mounted) {
+                            if (transaction.transactionStatus == 'settlement') {
+                              Provider.of<Products>(context, listen: false)
+                                  .itemPaidoff(widget.product);
+                              Provider.of<Cart>(context, listen: false)
+                                  .deletecart(widget.product.idcustomer,
+                                      widget.product.idcart);
+                            }
+                          }
+                          if (mounted) {
+                            _timer.cancel();
+                            Navigator.pushReplacementNamed(
+                                context, HomeCustomer.nameRoute);
+                          }
                         },
                         child: Text("Return to merchant's page",
                             style: TextStyle(fontSize: 20)),

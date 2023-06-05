@@ -17,84 +17,112 @@ class ProductGrid extends StatefulWidget {
 }
 
 class _ProductGridState extends State<ProductGrid> {
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    Provider.of<Products>(context, listen: false).getAllProduct();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    final auth = Provider.of<Auth>(context, listen: false);
+    final akunProv = Provider.of<AkunProvider>(context, listen: false);
+
+    await akunProv.getDataById(auth.userId.toString());
+    AkunModel akun = akunProv.selectById(auth.userId.toString());
+
+    final productProv = Provider.of<Products>(context, listen: false);
+
+    if (akun.status == "Customer") {
+      await productProv.getAllProduct();
+    } else if (akun.status == "Seller") {
+      await productProv.getAllProductById(auth.userId!);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final productProv = Provider.of<Products>(context);
+    final allproduct = productProv.allProduct;
     final auth = Provider.of<Auth>(context, listen: false);
     final akunProv = Provider.of<AkunProvider>(context, listen: false);
 
     akunProv.getDataById(auth.userId.toString());
     AkunModel akun = akunProv.selectById(auth.userId.toString());
 
-    final productProv = Provider.of<Products>(context);
-    final allproduct = productProv.allProduct;
-
     final cart = Provider.of<Cart>(context, listen: false);
-    return GridView.builder(
-      padding: const EdgeInsets.all(10.0),
-      itemCount: allproduct.length,
-      itemBuilder: (ctx, i) => ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: GridTile(
-          footer: GridTileBar(
-            backgroundColor: Colors.black87,
-            // leading: IconButton(
-            //   icon: const Icon(Icons.favorite_border_outlined),
-            //   color: ColorPalette.secondaryColor,
-            //   onPressed: () {},
-            // ),
-            title: Text(
-              allproduct[i].title,
-              textAlign: TextAlign.center,
-            ),
-            trailing: IconButton(
-              icon: const Icon(
-                Icons.shopping_cart,
+
+    if (_isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return allproduct.isEmpty
+        ? Container(
+            margin: EdgeInsets.fromLTRB(25, 150, 25, 0),
+            child: Text(
+              "empty products",
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
               ),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Successfully Added Product to Cart'),
-                  duration: Duration(milliseconds: 500),
-                ));
-
-                final product = productProv.selectById(allproduct[i].id);
-
-                cart.addCart(akun.id, product);
-              },
-              color: ColorPalette.secondaryColor,
             ),
-          ),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                ProductDetailView.nameRoute,
-                arguments: allproduct[i].id,
-              );
-            },
-            child: Image.network(
-              allproduct[i].imageUrl,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-      ),
-      // ProductItem(
-      //   allproduct[i].id,
-      //   allproduct[i].title,
-      //   allproduct[i].imageUrl,
-      // )
+          )
+        : GridView.builder(
+            padding: const EdgeInsets.all(10.0),
+            itemCount: allproduct.length,
+            itemBuilder: (ctx, i) => ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: GridTile(
+                footer: GridTileBar(
+                  backgroundColor: Colors.black87,
+                  title: Text(
+                    allproduct[i].title,
+                    textAlign: TextAlign.center,
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(
+                      Icons.shopping_cart,
+                    ),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Successfully Added Product to Cart'),
+                        duration: Duration(milliseconds: 500),
+                      ));
 
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3 / 2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-    );
+                      final product = productProv.selectById(allproduct[i].id);
+
+                      cart.addCart(akun.id, product);
+                    },
+                    color: ColorPalette.secondaryColor,
+                  ),
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      ProductDetailView.nameRoute,
+                      arguments: allproduct[i].id,
+                    );
+                  },
+                  child: Image.network(
+                    allproduct[i].imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 3 / 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
+          );
   }
 }
