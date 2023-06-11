@@ -101,20 +101,35 @@ class Payment with ChangeNotifier {
     }
   }
 
-  Future<void> getHistoryPayment() async {
+  Future<void> getHistoryPayment(String productid) async {
     var url = Uri.parse("$baseurlfirebase/payment.json");
     var response = await http.get(url);
-    print("masuk");
+    // print("masuk");
     if (response.statusCode == 200) {
       var product = json.decode(response.body) as Map<String, dynamic>;
-      print(response.body);
+      // print(response.body);
       _wallet.clear();
       product.forEach((key, value) {
-        _wallet.add(product);
+        // print(key); // Mengambil kunci dari objek (idCustomer)
+        // print(value); // Mengambil nilai dari objek (objek)
+
+        // Jika value juga merupakan objek, Anda dapat mengambil kunci di dalamnya dengan cara yang sama
+        if (value is Map<String, dynamic>) {
+          value.forEach((nestedKey, nestedValue) {
+            if (nestedValue['productid'] == productid) {
+              // print(
+              //     nestedKey); // Mengambil kunci dari objek dalam objek (idpayment)
+              // print(
+              //     nestedValue); // Mengambil nilai dari objek dalam objek (objek)
+              _wallet.add(nestedValue);
+            }
+          });
+        }
       });
       notifyListeners();
     }
   }
+  // _wallet.add(product);
 
   Future<Map<String, dynamic>> createTransactiongVABCA(String title, int qty,
       String orderid, String price, String userid, String productid) async {
