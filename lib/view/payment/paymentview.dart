@@ -72,6 +72,8 @@ class _PaymentViewState extends State<PaymentView> {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
         if (mounted) {
           updateTimer();
+          final auth = Provider.of<Auth>(context, listen: false);
+          arguments.idcustomer = auth.userId.toString();
 
           await _cekTransactionStatus(orderid).then((value) {
             if (value != '') {
@@ -163,7 +165,6 @@ class _PaymentViewState extends State<PaymentView> {
     arguments = ModalRoute.of(context)?.settings.arguments as Product;
     var total = int.parse(arguments.price) * arguments.qtycart;
     final wallet = Provider.of<Payment>(context, listen: false);
-    final auth = Provider.of<Auth>(context, listen: false);
 
     final List<Map<String, dynamic>> paymentList = [
       {
@@ -265,7 +266,7 @@ class _PaymentViewState extends State<PaymentView> {
                                                       arguments.qtycart,
                                                       orderid,
                                                       arguments.price,
-                                                      auth.userId.toString(),
+                                                      arguments.idcustomer,
                                                       arguments.id)
                                                   .then((value) async {
                                                 print(value['va_numbers'][0]
@@ -293,7 +294,7 @@ class _PaymentViewState extends State<PaymentView> {
                                                       arguments.qtycart,
                                                       orderid,
                                                       arguments.price,
-                                                      auth.userId!,
+                                                      arguments.idcustomer,
                                                       arguments.id)
                                                   .then((value) async {
                                                 if (mounted) {
